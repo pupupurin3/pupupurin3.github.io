@@ -1,9 +1,8 @@
 # pupupurin3.github.io
 
-Noah Matsukuma's portfolio: a React + Three.js site styled like a street-side
-tape shop. It has a cassette loading screen, a poster-style header with
-Noah's diorama render, projects as 3D cassette tapes on a shelf, and an
-interactive 3D model gallery.
+Noah Matsukuma's portfolio: a clean, minimal React site with a Lab section
+that shows off harder front-end work (a 3D tape shelf, a model viewer,
+scroll-linked animation, spring physics) and a ⌘K command palette.
 
 ## Run locally
 
@@ -32,12 +31,14 @@ with a real description.
 
 | File | What it does |
 | --- | --- |
-| `src/components/LoadingScreen.jsx` | Cassette loader with winding reels and a slanted wipe exit |
-| `src/components/Hero.jsx` | Poster header: diorama render, stickers, parallax layers, ticker |
-| `src/components/TapeShelf.jsx` | 3D shelf of tapes, filters, track list and the Now Playing popup |
-| `src/components/Cassette.jsx` | Procedural cassette with generated label, or your `.glb` |
-| `src/components/Sections.jsx` | Nav, About, 3D gallery, timeline, contact |
-| `src/components/ModelViewer.jsx` | Reusable orbit viewer with spin / wireframe / reset |
+| `src/components/LoadingScreen.jsx` | Counter + hairline progress intro with a clip-path exit |
+| `src/components/Hero.jsx` | Masked word reveal, 3D tilt card with the diorama render |
+| `src/components/Work.jsx` | Filterable project grid; cards morph into a detail dialog (shared layout) |
+| `src/components/Lab.jsx` | Tabbed experiments: tape shelf, model viewer, scroll-linked text, spring physics |
+| `src/components/TapeShelf.jsx` | 3D shelf of cassette tapes with hover, filter flip and a Now Playing popup |
+| `src/components/Cassette.jsx` | Procedural cassette with a generated label, or your `.glb` |
+| `src/components/CommandPalette.jsx` | ⌘K / Ctrl+K fuzzy search over sections, projects and links (the phone menu too) |
+| `src/components/Sections.jsx` | Nav, About (bio, skills, experience, education), contact, toast |
 | `src/components/models.jsx` | Procedural gallery models (Purin, Mars terrain, maze) and the `.glb` loader |
 
 The header image is `public/img/hero-model.png`, a cut-out of the diorama render.

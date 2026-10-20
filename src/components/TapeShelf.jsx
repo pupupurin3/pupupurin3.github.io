@@ -59,10 +59,10 @@ function Shelf({ cols, rows }) {
             <boxGeometry args={[w, 0.07, 0.6]} />
             <meshStandardMaterial color="#2b2b2b" roughness={0.7} />
           </mesh>
-          {/* Acid-yellow price rail along the front edge */}
+          {/* Accent rail along the front edge */}
           <mesh position={[0, -0.005, 0.305]}>
             <boxGeometry args={[w - 0.1, 0.06, 0.012]} />
-            <meshStandardMaterial color="#d7ff1f" emissive="#d7ff1f" emissiveIntensity={0.15} />
+            <meshStandardMaterial color="#8ab4ff" emissive="#8ab4ff" emissiveIntensity={0.15} />
           </mesh>
         </group>
       ))}
@@ -124,7 +124,7 @@ function TapeViewer({ project }) {
   return (
     <div className="model-viewer tape-viewer">
       <Canvas camera={{ position: [0, 0.1, 1.9], fov: 35 }} dpr={[1, 2]}>
-        <color attach="background" args={['#141414']} />
+        <color attach="background" args={['#111214']} />
         <hemisphereLight args={['#ffffff', '#222', 1]} />
         <directionalLight position={[2, 3, 3]} intensity={2.4} />
         <Suspense fallback={null}>
@@ -230,7 +230,7 @@ export default function TapeShelf() {
             <CameraRig h={h} />
             <hemisphereLight args={['#ffffff', '#1a1a1a', 0.8]} />
             <directionalLight position={[2, 4, 5]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} />
-            <pointLight position={[-3, 1, 2]} intensity={6} color="#d7ff1f" />
+            <pointLight position={[-3, 1, 2]} intensity={6} color="#8ab4ff" />
             <Shelf cols={cols} rows={rows} />
             <Suspense fallback={null}>
               {projects.map((p, i) => (
@@ -248,7 +248,7 @@ export default function TapeShelf() {
               ))}
             </Suspense>
           </Canvas>
-          <div className="shelf-sign">TAPE SHELF · {String(count).padStart(2, '0')} IN STOCK</div>
+          <div className="shelf-sign">{count} of {projects.length} tapes</div>
         </div>
         <ol className="tracklist" aria-label="Project list">
           {projects.map((p, i) => (

@@ -6,6 +6,10 @@ export const profile = {
   name: 'Noah Matsukuma',
   handle: 'Purin',
   roles: ['Game Developer', 'Programmer', '3D Modeller'],
+  headline: 'Game developer and 3D artist building interactive worlds.',
+  intro: "I'm a high school student at the California Academy of Mathematics and Science. I make games, model 3D scenes and build interactive things for the web.",
+  heroImage: '/img/hero-model.png',
+  heroCaption: 'Street corner diorama, modelled by me',
   avatar: '/img/avatar.jpg',
   email: 'noah.mtskm@gmail.com',
   github: 'https://github.com/pupupurin3',
@@ -18,11 +22,9 @@ export const profile = {
 }
 
 export const skills = [
-  { name: 'Python', level: 100 },
-  { name: 'C++ / C#', level: 100 },
-  { name: 'WordPress', level: 90 },
-  { name: 'Unity', level: 70 },
-  { name: 'HTML', level: 60 },
+  { group: 'Languages', items: ['Python', 'C++', 'C#', 'HTML'] },
+  { group: 'Engines & tools', items: ['Unity', 'WordPress', 'GitHub'] },
+  { group: 'Craft', items: ['Game design', '3D modelling', 'Team leadership'] },
 ]
 
 export const experience = [
@@ -76,6 +78,7 @@ export const tapeModel = null
 export const projects = [
   {
     title: 'Carpe Diem',
+    featured: true,
     category: 'Games',
     status: 'In progress',
     image: '/img/carpe-diem.jpg',
@@ -85,6 +88,7 @@ export const projects = [
   },
   {
     title: 'Blackjack Simulator',
+    featured: true,
     category: 'Games',
     status: 'Nov 2023',
     image: '/img/blackjack.jpg',
@@ -95,6 +99,7 @@ export const projects = [
   },
   {
     title: 'Virtual Escape Room',
+    featured: true,
     category: 'Games',
     color: '#5b3b7a',
     tags: ['Team project', 'Game Dev'],
@@ -103,6 +108,7 @@ export const projects = [
   },
   {
     title: 'Hanafuda',
+    featured: true,
     category: 'Games',
     color: '#b23a48',
     tags: ['Card game'],
@@ -151,6 +157,7 @@ export const projects = [
   },
   {
     title: 'Mars Simulation',
+    featured: true,
     category: 'Simulations',
     color: '#b5532f',
     tags: ['Simulation', '3D'],
@@ -168,6 +175,7 @@ export const projects = [
   },
   {
     title: '3D Maze Maker',
+    featured: true,
     category: '3D',
     color: '#2f8f6f',
     tags: ['3D', 'Procedural'],

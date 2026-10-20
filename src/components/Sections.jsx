@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
-import ModelViewer from './ModelViewer'
-import TapeShelf from './TapeShelf'
-import { education, experience, gallery, profile, skills } from '../data/content'
+import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
+import { modKey } from './CommandPalette'
+import { education, experience, profile, skills } from '../data/content'
+
+const ease = [0.22, 1, 0.36, 1]
 
 // Fades and lifts children into place the first time they scroll into view.
 export function Reveal({ children, delay = 0, className, as = 'div' }) {
@@ -10,209 +11,151 @@ export function Reveal({ children, delay = 0, className, as = 'div' }) {
   return (
     <M
       className={className}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay, ease }}
     >
       {children}
     </M>
   )
 }
 
-function SectionTitle({ kicker, children }) {
+export function SectionHeader({ index, title, lede }) {
   return (
-    <div className="section-title">
-      <Reveal><span className="kicker">{kicker}</span></Reveal>
-      <Reveal delay={0.05} as="h2">{children}</Reveal>
-      <motion.div
-        className="title-bar"
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      />
-    </div>
+    <header className="section-header">
+      <Reveal className="section-index">{index}</Reveal>
+      <div>
+        <Reveal as="h2">{title}</Reveal>
+        {lede && <Reveal as="p" delay={0.08} className="section-lede">{lede}</Reveal>}
+      </div>
+    </header>
   )
 }
 
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 25 })
+  const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30 })
   return <motion.div className="scroll-progress" style={{ scaleX }} />
 }
 
 const NAV = [
+  ['work', 'Work'],
+  ['lab', 'Lab'],
   ['about', 'About'],
-  ['projects', 'Projects'],
-  ['gallery', '3D'],
-  ['experience', 'Experience'],
   ['contact', 'Contact'],
 ]
 
 export function Nav({ show }) {
   const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
   const [active, setActive] = useState('')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => setScrolled(window.scrollY > 24)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
       { rootMargin: '-45% 0px -50% 0px' },
     )
-    NAV.forEach(([id]) => { const el = document.getElementById(id); if (el) io.observe(el) })
+    ;['home', ...NAV.map(([id]) => id)].forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el) })
     return () => { window.removeEventListener('scroll', onScroll); io.disconnect() }
   }, [])
 
   return (
     <motion.nav
       className={`nav ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -80 }}
-      animate={show ? { y: 0 } : {}}
-      transition={{ type: 'spring', stiffness: 200, damping: 24, delay: 0.1 }}
+      initial={{ y: -24, opacity: 0 }}
+      animate={show ? { y: 0, opacity: 1 } : {}}
+      transition={{ duration: 0.6, ease, delay: 0.2 }}
     >
-      <a href="#home" className="brand"><span className="brand-mark">P</span>PURIN<span>TAPES</span></a>
-      <button className="nav-toggle" aria-label="Menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-        <span /><span /><span />
-      </button>
-      <ul className={open ? 'open' : ''}>
+      <a href="#home" className="brand">Noah Matsukuma</a>
+      <ul>
         {NAV.map(([id, label]) => (
           <li key={id}>
-            <a href={`#${id}`} className={active === id ? 'active' : ''} onClick={() => setOpen(false)}>
-              {label}
-              {active === id && <motion.span layoutId="nav-dot" className="nav-dot" />}
+            <a href={`#${id}`} className={active === id ? 'active' : ''}>
+              {active === id && <motion.span layoutId="nav-pill" className="nav-pill" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+              <span className="label">{label}</span>
             </a>
           </li>
         ))}
       </ul>
+      <button className="kbd-btn" onClick={() => window.dispatchEvent(new Event('open-palette'))} aria-label="Open command palette">
+        <span className="kbd-btn-text">Search</span><span className="kbd-btn-menu">Menu</span><kbd>{modKey}</kbd><kbd>K</kbd>
+      </button>
     </motion.nav>
-  )
-}
-
-function SkillBar({ name, level, i }) {
-  return (
-    <div className="skill">
-      <div className="skill-head"><span>{name}</span><span>{level}%</span></div>
-      <div className="skill-track">
-        <motion.div
-          className="skill-fill"
-          initial={{ width: 0 }}
-          whileInView={{ width: `${level}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.1, delay: 0.15 * i, ease: [0.22, 1, 0.36, 1] }}
-        />
-      </div>
-    </div>
   )
 }
 
 export function About() {
   return (
-    <section id="about" className="section">
-      <SectionTitle kicker="01 · Agent file">About me</SectionTitle>
-      <div className="about-grid">
-        <Reveal className="card about-card">
-          <motion.img
-            src={profile.avatar}
-            alt={`${profile.name} avatar`}
-            className="avatar"
-            whileHover={{ rotate: -3, scale: 1.04 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          />
-          <dl className="stats">
-            <div><dt>Name</dt><dd>{profile.name}</dd></div>
-            <div><dt>Class</dt><dd>Student</dd></div>
-            <div><dt>Base</dt><dd>{profile.location}</dd></div>
-          </dl>
-          <div className="skills">
-            {skills.map((s, i) => <SkillBar key={s.name} {...s} i={i} />)}
+    <div className="about">
+      <div className="about-bio">
+        <Reveal className="about-person">
+          <img src={profile.avatar} alt={`${profile.name} avatar`} className="avatar" />
+          <div>
+            <strong>{profile.name}</strong>
+            <span>{profile.location}</span>
           </div>
         </Reveal>
-        <div className="about-text">
-          {profile.bio.map((p, i) => (
-            <Reveal key={i} delay={0.1 * i} as="p">{p}</Reveal>
+        {profile.bio.map((p, i) => <Reveal key={i} as="p" delay={0.05 * i}>{p}</Reveal>)}
+        <Reveal className="skills">
+          {skills.map((s) => (
+            <div key={s.group} className="skill-group">
+              <p>{s.group}</p>
+              <div className="tags">{s.items.map((t) => <span key={t}>{t}</span>)}</div>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
-    </section>
-  )
-}
-
-export function Projects() {
-  return (
-    <section id="projects" className="section">
-      <SectionTitle kicker="02 · Tape shelf">Projects</SectionTitle>
-      <Reveal><p className="section-lede">Every project is a tape. Pick one off the shelf to play it.</p></Reveal>
-      <TapeShelf />
-    </section>
-  )
-}
-
-export function Gallery() {
-  const [i, setI] = useState(0)
-  const item = gallery[i]
-  return (
-    <section id="gallery" className="section">
-      <SectionTitle kicker="03 · Workshop">3D models</SectionTitle>
-      <Reveal className="gallery">
-        <div className="gallery-list">
-          {gallery.map((g, idx) => (
-            <button key={g.name} className={idx === i ? 'on' : ''} onClick={() => setI(idx)}>
-              <span className="gallery-index">{String(idx + 1).padStart(2, '0')}</span>
-              <span>
-                <strong>{g.name}</strong>
-                <small>{g.note}</small>
-              </span>
-            </button>
-          ))}
-        </div>
-        <ModelViewer model={item.model} className="gallery-viewer" />
-      </Reveal>
-    </section>
-  )
-}
-
-export function Experience() {
-  return (
-    <section id="experience" className="section">
-      <SectionTitle kicker="04 · Save file">Experience & education</SectionTitle>
-      <div className="timeline">
+      <div className="about-cv">
+        <Reveal as="h3" className="cv-title">Experience</Reveal>
         {experience.map((e, i) => (
-          <Reveal key={e.title} delay={0.1 * i} className="timeline-item">
-            <span className="timeline-dot" />
-            <h3>{e.title}</h3>
-            <p className="project-meta">{e.org}</p>
+          <Reveal key={e.title} delay={0.05 * i} className="cv-item">
+            <div className="cv-head"><h4>{e.title}</h4><span>{e.org}</span></div>
             <ul>{e.points.map((p) => <li key={p}>{p}</li>)}</ul>
           </Reveal>
         ))}
+        <Reveal as="h3" className="cv-title">Education</Reveal>
         {education.map((e, i) => (
-          <Reveal key={e.school} delay={0.1 * i} className="timeline-item edu">
-            <span className="timeline-dot" />
-            <h3>{e.school}</h3>
-            <p className="project-meta">{e.dates}{e.detail ? ` · ${e.detail}` : ''}</p>
+          <Reveal key={e.school} delay={0.05 * i} className="cv-item">
+            <div className="cv-head"><h4>{e.school}</h4><span>{e.dates}</span></div>
+            {e.detail && <p className="cv-detail">{e.detail}</p>}
             {e.courses && <div className="tags">{e.courses.map((c) => <span key={c}>{c}</span>)}</div>}
           </Reveal>
         ))}
       </div>
-    </section>
+    </div>
   )
 }
 
-export function Contact() {
+export function Toast({ message }) {
   return (
-    <section id="contact" className="section contact">
-      <SectionTitle kicker="05 · Continue?">Get in touch</SectionTitle>
-      <Reveal className="card contact-card">
-        <p>Want to team up on a game, or just say hi? My inbox is open.</p>
-        <div className="modal-links">
-          <motion.a whileHover={{ y: -3 }} whileTap={{ scale: 0.96 }} className="btn primary" href={`mailto:${profile.email}`}>{profile.email}</motion.a>
-          <motion.a whileHover={{ y: -3 }} whileTap={{ scale: 0.96 }} className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub</motion.a>
-        </div>
+    <AnimatePresence>
+      {message && (
+        <motion.div className="toast" role="status" initial={{ opacity: 0, y: 20, x: '-50%' }} animate={{ opacity: 1, y: 0, x: '-50%' }} exit={{ opacity: 0, y: 20, x: '-50%' }}>
+          {message}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+export function Contact({ onToast }) {
+  const copy = () => navigator.clipboard?.writeText(profile.email).then(() => onToast('Email copied'), () => onToast(profile.email))
+  return (
+    <div className="contact">
+      <Reveal as="h2" className="contact-title">Let’s build something together.</Reveal>
+      <Reveal as="p" delay={0.08} className="section-lede">Open to collaborations, game jams and internships. The fastest way to reach me is email.</Reveal>
+      <Reveal delay={0.12} className="links">
+        <a className="btn primary" href={`mailto:${profile.email}`}>{profile.email}</a>
+        <button className="btn" onClick={copy}>Copy email</button>
+        <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
       </Reveal>
-      <footer className="footer">© {new Date().getFullYear()} {profile.name} · Built with React & Three.js</footer>
-    </section>
+      <footer className="footer">
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <span>Built with React, Three.js and Framer Motion</span>
+      </footer>
+    </div>
   )
 }
