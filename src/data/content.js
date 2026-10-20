@@ -2,15 +2,19 @@
 // touching a component. Blurbs followed by `// TODO` were written from the
 // repo name only and should be replaced with a real description.
 
+// Public files are referenced through the build's base URL, so the site also
+// works when served from a sub-path (e.g. a preview host).
+const asset = (path) => import.meta.env.BASE_URL + path
+
 export const profile = {
   name: 'Noah Matsukuma',
   handle: 'Purin',
   roles: ['Game Developer', 'Programmer', '3D Modeller'],
   headline: 'Game developer and 3D artist building interactive worlds.',
   intro: "I'm a high school student at the California Academy of Mathematics and Science. I make games, model 3D scenes and build interactive things for the web.",
-  heroImage: '/img/hero-model.png',
+  heroImage: asset('img/hero-model.png'),
   heroCaption: 'Street corner diorama, modelled by me',
-  avatar: '/img/avatar.jpg',
+  avatar: asset('img/avatar.jpg'),
   email: 'noah.mtskm@gmail.com',
   github: 'https://github.com/pupupurin3',
   location: 'Los Angeles, CA',
@@ -81,7 +85,7 @@ export const projects = [
     featured: true,
     category: 'Games',
     status: 'In progress',
-    image: '/img/carpe-diem.jpg',
+    image: asset('img/carpe-diem.jpg'),
     color: '#3b5b7a',
     tags: ['Game Dev', 'Pixel Art'],
     blurb: 'My original game, currently in development.',
@@ -91,7 +95,7 @@ export const projects = [
     featured: true,
     category: 'Games',
     status: 'Nov 2023',
-    image: '/img/blackjack.jpg',
+    image: asset('img/blackjack.jpg'),
     color: '#1f7a3a',
     tags: ['Python'],
     blurb: 'A playable blackjack game with hit and stand controls.',
