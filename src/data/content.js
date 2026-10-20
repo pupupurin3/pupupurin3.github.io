@@ -63,6 +63,13 @@ export const education = [
 // Categories drive the filter tabs in the Projects section.
 export const categories = ['All', 'Games', 'Simulations', 'Apps', '3D']
 
+// Cassette model used for every tape on the shelf. Leave null for the
+// built-in tape, or export your own from Blender to /public/models and set
+// e.g. '/models/cassette.glb'. A material named "Label" on it receives each
+// project's generated label. A single project can override this with its
+// own `cassette: '/models/x.glb'`.
+export const tapeModel = null
+
 // `model` (optional) opens an interactive 3D viewer in the project popup.
 // It is either a built-in procedural model key ('purin', 'mars', 'maze')
 // or a path to a .glb file you drop into /public/models.

@@ -1,7 +1,8 @@
 # pupupurin3.github.io
 
-Noah Matsukuma's portfolio: a React + Three.js site with a retro game-style
-loading screen, an animated 3D hero, a filterable project showcase and an
+Noah Matsukuma's portfolio: a React + Three.js site styled like a street-side
+tape shop. It has a cassette loading screen, a poster-style header with
+Noah's diorama render, projects as 3D cassette tapes on a shelf, and an
 interactive 3D model gallery.
 
 ## Run locally
@@ -19,6 +20,10 @@ Blurbs marked `// TODO` were written from the repo name only; replace them
 with a real description.
 
 - **Project screenshot:** put the image in `public/img/` and set `image: '/img/name.jpg'`.
+- **Your own cassette model:** export a `.glb` into `public/models/` and set
+  `tapeModel` in `content.js` (or `cassette` on one project). Name the label's
+  material `Label` and each project's generated label is applied to it. Make
+  the tape about 10 x 6.3 x 1.2 units, front facing +Z; it is scaled to fit.
 - **3D model on a project or in the gallery:** export a `.glb` (in Blender:
   File > Export > glTF 2.0, format "glb") into `public/models/` and set
   `model: '/models/name.glb'`. Models are centred and scaled automatically.
@@ -27,11 +32,15 @@ with a real description.
 
 | File | What it does |
 | --- | --- |
-| `src/components/LoadingScreen.jsx` | Boot screen with segmented progress bar and curtain exit |
-| `src/components/Hero.jsx` | 3D voxel mascot, floating cubes, letter-by-letter title, typed roles |
-| `src/components/Sections.jsx` | Nav, About, Projects (filters + popup), 3D Gallery, timeline, contact |
+| `src/components/LoadingScreen.jsx` | Cassette loader with winding reels and a slanted wipe exit |
+| `src/components/Hero.jsx` | Poster header: diorama render, stickers, parallax layers, ticker |
+| `src/components/TapeShelf.jsx` | 3D shelf of tapes, filters, track list and the Now Playing popup |
+| `src/components/Cassette.jsx` | Procedural cassette with generated label, or your `.glb` |
+| `src/components/Sections.jsx` | Nav, About, 3D gallery, timeline, contact |
 | `src/components/ModelViewer.jsx` | Reusable orbit viewer with spin / wireframe / reset |
-| `src/components/models.jsx` | Procedural models (Purin, Mars terrain, maze) and the `.glb` loader |
+| `src/components/models.jsx` | Procedural gallery models (Purin, Mars terrain, maze) and the `.glb` loader |
+
+The header image is `public/img/hero-model.png`, a cut-out of the diorama render.
 
 Animations use Framer Motion and respect the visitor's reduced-motion setting.
 

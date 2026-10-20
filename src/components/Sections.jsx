@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useScroll, useSpring } from 'framer-motion'
 import ModelViewer from './ModelViewer'
-import { categories, education, experience, gallery, profile, projects, skills } from '../data/content'
+import TapeShelf from './TapeShelf'
+import { education, experience, gallery, profile, skills } from '../data/content'
 
 // Fades and lifts children into place the first time they scroll into view.
 export function Reveal({ children, delay = 0, className, as = 'div' }) {
@@ -73,7 +74,7 @@ export function Nav({ show }) {
       animate={show ? { y: 0 } : {}}
       transition={{ type: 'spring', stiffness: 200, damping: 24, delay: 0.1 }}
     >
-      <a href="#home" className="brand">PURIN<span>.dev</span></a>
+      <a href="#home" className="brand"><span className="brand-mark">P</span>PURIN<span>TAPES</span></a>
       <button className="nav-toggle" aria-label="Menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
         <span /><span /><span />
       </button>
@@ -111,7 +112,7 @@ function SkillBar({ name, level, i }) {
 export function About() {
   return (
     <section id="about" className="section">
-      <SectionTitle kicker="01 · Profile">About me</SectionTitle>
+      <SectionTitle kicker="01 · Agent file">About me</SectionTitle>
       <div className="about-grid">
         <Reveal className="card about-card">
           <motion.img
@@ -140,124 +141,12 @@ export function About() {
   )
 }
 
-// Cover for projects that have no screenshot yet: a pixel pattern in the
-// project's colour with its initials.
-function Cover({ project }) {
-  if (project.image) return <img src={project.image} alt="" loading="lazy" />
-  const initials = project.title.split(/\s+/).map((w) => w[0]).join('').slice(0, 3)
-  return (
-    <div className="cover-pattern" style={{ '--c': project.color }}>
-      <span>{initials}</span>
-    </div>
-  )
-}
-
-function projectLinks(p) {
-  const links = [...(p.links || [])]
-  if (p.repo) links.push({ label: 'Source on GitHub', url: `${profile.github}/${p.repo}` })
-  return links
-}
-
-function ProjectCard({ project, onOpen }) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 })
-  return (
-    <motion.button
-      layout
-      className="project-card"
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3 }}
-      onClick={() => onOpen(project)}
-      onMouseMove={(e) => {
-        const r = e.currentTarget.getBoundingClientRect()
-        setTilt({ x: ((e.clientY - r.top) / r.height - 0.5) * -8, y: ((e.clientX - r.left) / r.width - 0.5) * 8 })
-      }}
-      onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-      style={{ rotateX: tilt.x, rotateY: tilt.y }}
-    >
-      <motion.div className="project-cover" layoutId={`cover-${project.title}`}>
-        <Cover project={project} />
-        {project.model && <span className="badge">3D</span>}
-      </motion.div>
-      <div className="project-body">
-        <h3>{project.title}</h3>
-        <p className="project-meta">{project.category}{project.status ? ` · ${project.status}` : ''}</p>
-        <div className="tags">{project.tags.map((t) => <span key={t}>{t}</span>)}</div>
-      </div>
-    </motion.button>
-  )
-}
-
-function ProjectModal({ project, onClose }) {
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    window.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
-  }, [onClose])
-
-  return (
-    <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div
-        className="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-label={project.title}
-        initial={{ y: 60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 60, opacity: 0 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 26 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
-        {project.model ? (
-          <ModelViewer model={project.model} className="modal-media" />
-        ) : (
-          <motion.div className="project-cover modal-media" layoutId={`cover-${project.title}`}>
-            <Cover project={project} />
-          </motion.div>
-        )}
-        <div className="modal-body">
-          <h3>{project.title}</h3>
-          <p className="project-meta">{project.category}{project.status ? ` · ${project.status}` : ''}</p>
-          <p>{project.blurb}</p>
-          <div className="tags">{project.tags.map((t) => <span key={t}>{t}</span>)}</div>
-          <div className="modal-links">
-            {projectLinks(project).map((l) => (
-              <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="btn primary">{l.label}</a>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
 export function Projects() {
-  const [filter, setFilter] = useState('All')
-  const [open, setOpen] = useState(null)
-  const shown = projects.filter((p) => filter === 'All' || p.category === filter || (filter === '3D' && p.model))
-
   return (
     <section id="projects" className="section">
-      <SectionTitle kicker="02 · Quest log">Projects</SectionTitle>
-      <Reveal className="filters">
-        {categories.map((c) => (
-          <button key={c} className={filter === c ? 'on' : ''} onClick={() => setFilter(c)}>
-            {filter === c && <motion.span layoutId="filter-pill" className="filter-pill" />}
-            <span className="filter-label">{c}</span>
-          </button>
-        ))}
-      </Reveal>
-      <motion.div layout className="project-grid">
-        <AnimatePresence mode="popLayout">
-          {shown.map((p) => <ProjectCard key={p.title} project={p} onOpen={setOpen} />)}
-        </AnimatePresence>
-      </motion.div>
-      <AnimatePresence>
-        {open && <ProjectModal project={open} onClose={() => setOpen(null)} />}
-      </AnimatePresence>
+      <SectionTitle kicker="02 · Tape shelf">Projects</SectionTitle>
+      <Reveal><p className="section-lede">Every project is a tape. Pick one off the shelf to play it.</p></Reveal>
+      <TapeShelf />
     </section>
   )
 }
@@ -267,7 +156,7 @@ export function Gallery() {
   const item = gallery[i]
   return (
     <section id="gallery" className="section">
-      <SectionTitle kicker="03 · Workshop">3D gallery</SectionTitle>
+      <SectionTitle kicker="03 · Workshop">3D models</SectionTitle>
       <Reveal className="gallery">
         <div className="gallery-list">
           {gallery.map((g, idx) => (

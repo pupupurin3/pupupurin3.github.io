@@ -1,76 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Float } from '@react-three/drei'
-import { motion, useInView } from 'framer-motion'
-import * as THREE from 'three'
-import { Purin } from './models'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { profile } from '../data/content'
-
-// Floating pixel cubes drifting around the mascot.
-function Cubes({ count = 40 }) {
-  const ref = useRef()
-  const cubes = useMemo(
-    () => Array.from({ length: count }, (_, i) => ({
-      p: new THREE.Vector3((Math.random() - 0.5) * 9, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5 - 1.5),
-      s: 0.05 + Math.random() * 0.12,
-      speed: 0.2 + Math.random() * 0.6,
-      phase: Math.random() * Math.PI * 2,
-      color: ['#7fc4ff', '#f6d36b', '#f29aa5', '#ffffff'][i % 4],
-    })),
-    [count],
-  )
-  const o = useMemo(() => new THREE.Object3D(), [])
-  const c = useMemo(() => new THREE.Color(), [])
-
-  useLayoutEffect(() => {
-    cubes.forEach((cube, i) => ref.current.setColorAt(i, c.set(cube.color)))
-    ref.current.instanceColor.needsUpdate = true
-  }, [cubes, c])
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime
-    cubes.forEach((cube, i) => {
-      o.position.set(cube.p.x, cube.p.y + Math.sin(t * cube.speed + cube.phase) * 0.3, cube.p.z)
-      o.rotation.set(t * cube.speed, t * cube.speed * 0.7, 0)
-      o.scale.setScalar(cube.s)
-      o.updateMatrix()
-      ref.current.setMatrixAt(i, o.matrix)
-    })
-    ref.current.instanceMatrix.needsUpdate = true
-  })
-
-  return (
-    <instancedMesh ref={ref} args={[null, null, count]}>
-      <boxGeometry />
-      <meshStandardMaterial emissive="#335" roughness={0.4} />
-    </instancedMesh>
-  )
-}
-
-// Tilts the scene toward the pointer for a subtle parallax.
-function Rig({ children }) {
-  const ref = useRef()
-  useFrame((state, dt) => {
-    const { x, y } = state.pointer
-    ref.current.rotation.y = THREE.MathUtils.damp(ref.current.rotation.y, x * 0.5, 3, dt)
-    ref.current.rotation.x = THREE.MathUtils.damp(ref.current.rotation.x, -y * 0.2, 3, dt)
-  })
-  return <group ref={ref}>{children}</group>
-}
-
-// Keeps the mascot in the upper part of the screen, above the title, and
-// shrinks it on narrow (portrait) screens.
-function Stage({ children }) {
-  const { width, height } = useThree((s) => s.viewport)
-  const scale = Math.min(1.1, width / 2.6)
-  return <group position={[0, height * 0.16, 0]} scale={scale}>{children}</group>
-}
-
-function Spinner({ children }) {
-  const ref = useRef()
-  useFrame((_, dt) => { ref.current.rotation.y += dt * 0.4 })
-  return <group ref={ref}>{children}</group>
-}
 
 function TypedRoles({ roles, start }) {
   const [i, setI] = useState(0)
@@ -90,87 +20,94 @@ function TypedRoles({ roles, start }) {
     return () => clearTimeout(t)
   }, [text, deleting, i, roles, start])
 
-  return <span className="typed">{text}<span className="caret">|</span></span>
+  return <span className="typed">{text}<span className="caret">_</span></span>
 }
 
+// Sticker-style pop-in once the loader has finished.
+const pop = (start, delay, rotate = 0) => ({
+  initial: { scale: 0, rotate: rotate - 20, opacity: 0 },
+  animate: start ? { scale: 1, rotate, opacity: 1 } : {},
+  transition: { delay, type: 'spring', stiffness: 380, damping: 16 },
+})
+
+// Street-poster hero: the diorama render sits centre stage over a slanted
+// acid band and giant outlined name, with layers drifting against the mouse.
 export default function Hero({ start }) {
-  const words = profile.name.split(' ')
-  const section = useRef()
-  const inView = useInView(section)
+  const ref = useRef()
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const sx = useSpring(mx, { stiffness: 80, damping: 20 })
+  const sy = useSpring(my, { stiffness: 80, damping: 20 })
+  const backX = useTransform(sx, (v) => v * -30)
+  const backY = useTransform(sy, (v) => v * -16)
+  const midX = useTransform(sx, (v) => v * 14)
+  const midY = useTransform(sy, (v) => v * 10)
+  const tilt = useTransform(sx, (v) => v * 6)
+
+  const onMove = (e) => {
+    const r = ref.current.getBoundingClientRect()
+    mx.set((e.clientX - r.left) / r.width - 0.5)
+    my.set((e.clientY - r.top) / r.height - 0.5)
+  }
+  const [first, last] = profile.name.toUpperCase().split(' ')
 
   return (
-    <section id="home" className="hero" ref={section}>
-      <div className="hero-canvas">
-        {/* Paused behind the loading screen (so the loader animates smoothly) and when scrolled away. */}
-        <Canvas camera={{ position: [0, 0.4, 5], fov: 45 }} dpr={[1, 2]} frameloop={start && inView ? 'always' : 'never'}>
-          <ambientLight intensity={0.7} />
-          <directionalLight position={[3, 4, 3]} intensity={2.4} />
-          <pointLight position={[-3, -1, 2]} intensity={8} color="#7fc4ff" />
-          <Rig>
-            <Float speed={2} rotationIntensity={0.3} floatIntensity={0.8}>
-              <Stage>
-                <Spinner>{start && <Purin grow />}</Spinner>
-              </Stage>
-            </Float>
-            <Cubes />
-          </Rig>
-        </Canvas>
-      </div>
+    <section id="home" className="hero" ref={ref} onMouseMove={onMove}>
+      <div className="halftone" />
+      <motion.div
+        className="hero-band"
+        initial={{ scaleX: 0 }}
+        animate={start ? { scaleX: 1 } : {}}
+        transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+      />
+      <motion.div className="hero-bigname" style={{ x: backX, y: backY }} aria-hidden="true">
+        <motion.span initial={{ x: '-30%', opacity: 0 }} animate={start ? { x: 0, opacity: 1 } : {}} transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>{first}</motion.span>
+        <motion.span initial={{ x: '30%', opacity: 0 }} animate={start ? { x: 0, opacity: 1 } : {}} transition={{ delay: 0.4, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>{last}</motion.span>
+      </motion.div>
 
-      <div className="hero-overlay">
-        <motion.p
-          className="hero-kicker"
-          initial={{ opacity: 0, y: 10 }}
-          animate={start ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
+      <motion.div className="hero-stage" style={{ x: midX, y: midY, rotate: tilt }}>
+        <motion.div className="hero-disc" {...pop(start, 0.45)} />
+        <motion.img
+          src="/img/hero-model.png"
+          alt="Noah's 3D diorama of a street corner with a utility pole, balcony and air conditioner"
+          className="hero-model"
+          initial={{ y: 60, opacity: 0 }}
+          animate={start ? { y: [0, -12, 0], opacity: 1 } : {}}
+          transition={{ opacity: { delay: 0.55, duration: 0.4 }, y: { delay: 0.55, duration: 4, repeat: Infinity, ease: 'easeInOut' } }}
+        />
+        <motion.span className="sticker s1" {...pop(start, 0.9, -8)}>3D ARTIST</motion.span>
+        <motion.span className="sticker s2" {...pop(start, 1.0, 6)}>GAME DEV</motion.span>
+        <motion.span className="sticker s3" {...pop(start, 1.1, -4)}>★ {profile.handle.toUpperCase()}</motion.span>
+      </motion.div>
+
+      <div className="hero-copy">
+        <motion.h1
+          initial={{ opacity: 0, x: -40, skewX: -12 }}
+          animate={start ? { opacity: 1, x: 0, skewX: -8 } : {}}
+          transition={{ delay: 0.7, type: 'spring', stiffness: 200, damping: 20 }}
         >
-          Player 1 · {profile.handle}
+          {profile.name}
+        </motion.h1>
+        <motion.p className="hero-role" initial={{ opacity: 0 }} animate={start ? { opacity: 1 } : {}} transition={{ delay: 1.1 }}>
+          <span className="role-tag">NOW SHOWING</span> <TypedRoles roles={profile.roles} start={start} />
         </motion.p>
-        <h1 className="hero-name" aria-label={profile.name}>
-          {words.map((word, w) => (
-            <span key={w} className="hero-word" aria-hidden="true">
-              {word.split('').map((ch, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0, y: 40, rotate: -10 }}
-                  animate={start ? { opacity: 1, y: 0, rotate: 0 } : {}}
-                  transition={{ delay: 0.35 + (w * 5 + i) * 0.05, type: 'spring', stiffness: 300, damping: 18 }}
-                >
-                  {ch}
-                </motion.span>
-              ))}
-            </span>
-          ))}
-        </h1>
-        <motion.p
-          className="hero-role"
-          initial={{ opacity: 0 }}
-          animate={start ? { opacity: 1 } : {}}
-          transition={{ delay: 1.2 }}
-        >
-          <TypedRoles roles={profile.roles} start={start} />
-        </motion.p>
-        <motion.div
-          className="hero-cta"
-          initial={{ opacity: 0, y: 20 }}
-          animate={start ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.4 }}
-        >
-          <a href="#projects" className="btn primary">View projects</a>
-          <a href="#gallery" className="btn">3D gallery</a>
+        <motion.div className="hero-cta" initial={{ opacity: 0, y: 20 }} animate={start ? { opacity: 1, y: 0 } : {}} transition={{ delay: 1.3 }}>
+          <a href="#projects" className="btn primary">Browse the tapes</a>
+          <a href="#gallery" className="btn">3D workshop</a>
         </motion.div>
       </div>
 
-      <motion.a
-        href="#about"
-        className="scroll-cue"
-        aria-label="Scroll down"
-        initial={{ opacity: 0 }}
-        animate={start ? { opacity: 1, y: [0, 8, 0] } : {}}
-        transition={{ opacity: { delay: 1.8 }, y: { repeat: Infinity, duration: 1.4 } }}
-      >
-        ▼
-      </motion.a>
+      <div className="ticker" aria-hidden="true">
+        <div className="ticker-track">
+          {Array.from({ length: 2 }, (_, k) => (
+            <span key={k}>
+              {['NEW RELEASES', 'GAME DEV', '3D MODELLING', 'TAPES IN STOCK', 'OPEN 24/7', 'PURIN TAPE SHOP'].map((t) => (
+                <span key={t} className="ticker-item">{t}<i>◆</i></span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }
