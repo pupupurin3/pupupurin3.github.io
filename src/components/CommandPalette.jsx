@@ -4,7 +4,7 @@ import { profile, projects } from '../data/content'
 
 export const modKey = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl'
 
-const go = (id) => () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+const go = (id) => () => window.dispatchEvent(new CustomEvent('tv-tune', { detail: id }))
 
 function buildCommands(copyEmail) {
   return [
@@ -20,6 +20,10 @@ function buildCommands(copyEmail) {
       hint: p.category,
       run: () => { go('work')(); window.dispatchEvent(new CustomEvent('open-project', { detail: p.title })) },
     })),
+    { group: 'TV', label: 'Open TV menu', hint: 'M', run: () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'm' })) },
+    { group: 'TV', label: 'Fast-forward tape', hint: 'L', run: () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'l' })) },
+    { group: 'TV', label: 'Rewind tape', hint: 'J', run: () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'j' })) },
+    { group: 'TV', label: 'Pause tape', hint: 'K', run: () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k' })) },
     { group: 'Links', label: 'Copy email address', hint: profile.email, run: copyEmail },
     { group: 'Links', label: 'Open GitHub', hint: 'github.com/pupupurin3', run: () => window.open(profile.github, '_blank', 'noopener') },
   ]

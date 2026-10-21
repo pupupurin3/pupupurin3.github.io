@@ -3,7 +3,12 @@
 Noah Matsukuma's portfolio: a clean, minimal React site with a Lab section
 that shows off harder front-end work (a 3D tape shelf, a model viewer,
 scroll-linked animation, spring physics), a ⌘K command palette and an
-optional platformer you can play on top of the page.
+optional platformer you can play on top of the page. The whole site is
+framed as a VHS box TV: sections are channels, there is a remote with VCR
+controls, an on-screen setup menu and a colour-bar power-on intro.
+
+Keyboard: 1-5 channels, [ ] channel down/up, J K L rewind/pause/fast-forward,
+M menu, - + volume, I display, P game.
 
 ## Run locally
 
@@ -38,6 +43,7 @@ with a real description.
 | `src/components/Lab.jsx` | Tabbed experiments: tape shelf, model viewer, scroll-linked text, spring physics |
 | `src/components/TapeShelf.jsx` | 3D shelf of cassette tapes with hover, filter flip and a Now Playing popup |
 | `src/components/Cassette.jsx` | Procedural cassette with a generated label, or your `.glb` |
+| `src/tv/` | The VHS box TV layer: `TVContext` (channels, VCR transport, picture settings, sound), `CRT` (scanlines, noise, tracking, curved glass), `OSD`, `Remote`, `TVMenu`, `PowerScreen`, `Viewfinder` and synthesised `sound.js` |
 | `src/components/PlayLayer.jsx` | Optional platformer over the real page (P or the Play button): Purin jumps on headings and cards, collects 8 stars and opens projects from their cards |
 | `src/components/CommandPalette.jsx` | ⌘K / Ctrl+K fuzzy search over sections, projects and links (the phone menu too) |
 | `src/components/Sections.jsx` | Nav, About (bio, skills, experience, education), contact, toast |
