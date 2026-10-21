@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import Work from './components/Work'
 import Lab from './components/Lab'
 import CommandPalette from './components/CommandPalette'
+import PlayLayer from './components/PlayLayer'
 import { About, Contact, Nav, ScrollProgress, SectionHeader, Toast } from './components/Sections'
 
 export default function App() {
@@ -39,6 +40,7 @@ export default function App() {
           <Contact onToast={showToast} />
         </section>
       </main>
+      <PlayLayer show={started} onToast={showToast} />
       <CommandPalette onToast={showToast} />
       <Toast message={toast} />
     </>

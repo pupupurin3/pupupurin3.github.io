@@ -68,6 +68,7 @@ export default function Hero({ start }) {
         <motion.div className="hero-cta" {...fade(1.0)}>
           <a href="#work" className="btn primary">View work</a>
           <a href="#lab" className="btn">Explore the lab</a>
+          <button className="btn" onClick={() => window.dispatchEvent(new Event('toggle-game'))}>▶ Play the site</button>
         </motion.div>
         <motion.dl className="hero-stats" {...fade(1.1)}>
           <div><dt>Projects</dt><dd>{projects.length}</dd></div>

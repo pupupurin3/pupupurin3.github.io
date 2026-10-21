@@ -2,7 +2,8 @@
 
 Noah Matsukuma's portfolio: a clean, minimal React site with a Lab section
 that shows off harder front-end work (a 3D tape shelf, a model viewer,
-scroll-linked animation, spring physics) and a ⌘K command palette.
+scroll-linked animation, spring physics), a ⌘K command palette and an
+optional platformer you can play on top of the page.
 
 ## Run locally
 
@@ -37,6 +38,7 @@ with a real description.
 | `src/components/Lab.jsx` | Tabbed experiments: tape shelf, model viewer, scroll-linked text, spring physics |
 | `src/components/TapeShelf.jsx` | 3D shelf of cassette tapes with hover, filter flip and a Now Playing popup |
 | `src/components/Cassette.jsx` | Procedural cassette with a generated label, or your `.glb` |
+| `src/components/PlayLayer.jsx` | Optional platformer over the real page (P or the Play button): Purin jumps on headings and cards, collects 8 stars and opens projects from their cards |
 | `src/components/CommandPalette.jsx` | ⌘K / Ctrl+K fuzzy search over sections, projects and links (the phone menu too) |
 | `src/components/Sections.jsx` | Nav, About (bio, skills, experience, education), contact, toast |
 | `src/components/models.jsx` | Procedural gallery models (Purin, Mars terrain, maze) and the `.glb` loader |

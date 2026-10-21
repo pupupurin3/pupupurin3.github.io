@@ -13,6 +13,7 @@ function buildCommands(copyEmail) {
     { group: 'Navigate', label: 'Lab', run: go('lab') },
     { group: 'Navigate', label: 'About', run: go('about') },
     { group: 'Navigate', label: 'Contact', run: go('contact') },
+    { group: 'Play', label: 'Play the portfolio game', hint: 'P', run: () => window.dispatchEvent(new Event('toggle-game')) },
     ...projects.map((p) => ({
       group: 'Projects',
       label: p.title,

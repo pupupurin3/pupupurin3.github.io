@@ -33,7 +33,7 @@ function Card({ project, onOpen }) {
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.45, ease }}
     >
-      <motion.button className="card" layoutId={`card-${id}`} onClick={() => onOpen(project)} whileHover="hover">
+      <motion.button className="card" data-project={id} layoutId={`card-${id}`} onClick={() => onOpen(project)} whileHover="hover">
         <motion.div className="card-media" layoutId={`media-${id}`}>
           <motion.div className="card-media-inner" variants={{ hover: { scale: 1.04 } }} transition={{ duration: 0.5, ease }}>
             <Cover project={project} />
