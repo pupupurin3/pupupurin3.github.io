@@ -109,8 +109,14 @@ kbd {
   background-size: 40px 40px; opacity: 0.5;
   -webkit-mask-image: radial-gradient(ellipse at 50% 60%, #000 30%, transparent 75%); mask-image: radial-gradient(ellipse at 50% 60%, #000 30%, transparent 75%);
 }
-.tilt-card img { position: relative; width: 78%; height: 88%; margin: 6% auto 0; object-fit: contain; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6)); transform: translateZ(40px); }
-.tilt-glare { position: absolute; inset: 0; pointer-events: none; }
+.hero-stage { position: absolute; inset: 0; touch-action: pan-y; }
+.hero-poster { position: absolute; left: 11%; top: 6%; width: 78%; height: 88%; object-fit: contain; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6)); transition: opacity 0.6s; }
+.hero-stage.ready .hero-poster { opacity: 0; }
+.hero-canvas { position: absolute !important; inset: 0; opacity: 0; transition: opacity 0.6s; cursor: grab; }
+.hero-canvas:active { cursor: grabbing; }
+.hero-stage.ready .hero-canvas { opacity: 1; }
+.hero-stage-hint { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; padding: 4px 12px; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); background: rgba(10, 10, 11, 0.7); border: 1px solid var(--border); border-radius: 999px; pointer-events: none; transition: opacity 0.4s; }
+.hero-stage-hint.hide { opacity: 0; }
 .hero-figure figcaption { margin-top: 12px; font-size: 0.8rem; color: var(--faint); font-family: var(--mono); }
 @media (max-width: 880px) {
   .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 96px; min-height: auto; }

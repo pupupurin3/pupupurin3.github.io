@@ -13,7 +13,9 @@ export const profile = {
   headline: 'Game developer and 3D artist building interactive worlds.',
   intro: "I'm a high school student at the California Academy of Mathematics and Science. I make games, model 3D scenes and build interactive things for the web.",
   heroImage: asset('img/hero-model.png'),
-  heroCaption: 'Street corner diorama, modelled by me',
+  // Live model in the header (exported from Maya as OBJ, converted to .glb).
+  heroModel: asset('models/street-corner.glb'),
+  heroCaption: 'Street corner diorama, modelled by me in Maya',
   avatar: asset('img/avatar.jpg'),
   email: 'noah.mtskm@gmail.com',
   github: 'https://github.com/pupupurin3',

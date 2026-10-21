@@ -1,5 +1,6 @@
-import { Fragment, useRef } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { Fragment } from 'react'
+import { motion } from 'framer-motion'
+import HeroModel from './HeroModel'
 import { modKey } from './CommandPalette'
 import { profile, projects } from '../data/content'
 
@@ -20,33 +21,6 @@ function MaskedWords({ text, start, delay = 0 }) {
       </span>{' '}
     </Fragment>
   ))
-}
-
-// A card that tilts toward the pointer in 3D, with a moving highlight.
-function TiltCard({ children }) {
-  const ref = useRef()
-  const x = useMotionValue(0.5)
-  const y = useMotionValue(0.5)
-  const rx = useSpring(useTransform(y, [0, 1], [7, -7]), { stiffness: 150, damping: 18 })
-  const ry = useSpring(useTransform(x, [0, 1], [-9, 9]), { stiffness: 150, damping: 18 })
-  const glare = useTransform([x, y], ([gx, gy]) => `radial-gradient(circle at ${gx * 100}% ${gy * 100}%, rgba(255,255,255,0.10), transparent 55%)`)
-
-  return (
-    <motion.div
-      ref={ref}
-      className="tilt-card"
-      style={{ rotateX: rx, rotateY: ry }}
-      onPointerMove={(e) => {
-        const r = ref.current.getBoundingClientRect()
-        x.set((e.clientX - r.left) / r.width)
-        y.set((e.clientY - r.top) / r.height)
-      }}
-      onPointerLeave={() => { x.set(0.5); y.set(0.5) }}
-    >
-      {children}
-      <motion.div className="tilt-glare" style={{ background: glare }} />
-    </motion.div>
-  )
 }
 
 export default function Hero({ start }) {
@@ -83,10 +57,14 @@ export default function Hero({ start }) {
         animate={start ? { opacity: 1, scale: 1, clipPath: 'inset(0% 0% 0% 0% round 20px)' } : {}}
         transition={{ duration: 1.1, delay: 0.3, ease }}
       >
-        <TiltCard>
+        <div className="tilt-card">
           <div className="hero-grid" />
-          <img src={profile.heroImage} alt="3D diorama of a street corner with a utility pole, balcony, plants and an air conditioner" />
-        </TiltCard>
+          <HeroModel
+            url={profile.heroModel}
+            poster={profile.heroImage}
+            alt="3D diorama of a street corner with a utility pole, balcony, plants, an air conditioner and a vending machine"
+          />
+        </div>
         <figcaption>{profile.heroCaption}</figcaption>
       </motion.figure>
     </section>
