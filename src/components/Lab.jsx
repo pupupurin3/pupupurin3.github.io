@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { AnimatePresence, motion, Reorder, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import ModelViewer from './ModelViewer'
 import TapeShelf from './TapeShelf'
@@ -132,12 +132,6 @@ const DEMOS = [
 export default function Lab() {
   const [active, setActive] = useState(DEMOS[0].id)
   const demo = DEMOS.find((d) => d.id === active)
-  // The remote's eject button jumps straight to the tape shelf.
-  useEffect(() => {
-    const onTab = (e) => DEMOS.some((d) => d.id === e.detail) && setActive(e.detail)
-    window.addEventListener('lab-tab', onTab)
-    return () => window.removeEventListener('lab-tab', onTab)
-  }, [])
   return (
     <div className="lab">
       <div className="lab-tabs" role="tablist" aria-label="Experiments">

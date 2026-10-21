@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { modKey } from './CommandPalette'
-import { useTV } from '../tv/TVContext'
 import { education, experience, profile, skills } from '../data/content'
 
 const ease = [0.22, 1, 0.36, 1]
@@ -25,7 +24,7 @@ export function Reveal({ children, delay = 0, className, as = 'div' }) {
 export function SectionHeader({ index, title, lede }) {
   return (
     <header className="section-header">
-      <Reveal className="section-index"><span>CH</span> {index}</Reveal>
+      <Reveal className="section-index">{index}</Reveal>
       <div>
         <Reveal as="h2">{title}</Reveal>
         {lede && <Reveal as="p" delay={0.08} className="section-lede">{lede}</Reveal>}
@@ -48,7 +47,6 @@ const NAV = [
 ]
 
 export function Nav({ show }) {
-  const tv = useTV()
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('')
 
@@ -82,14 +80,9 @@ export function Nav({ show }) {
           </li>
         ))}
       </ul>
-      <div className="nav-right">
-      <button className={`power-btn ${tv.power === 'on' ? 'on' : ''}`} onClick={tv.togglePower} aria-label={tv.power === 'on' ? 'Turn the TV off' : 'Turn the TV on'} title="Power">
-        <span className="power-led" />⏻
-      </button>
       <button className="kbd-btn" onClick={() => window.dispatchEvent(new Event('open-palette'))} aria-label="Open command palette">
         <span className="kbd-btn-text">Search</span><span className="kbd-btn-menu">Menu</span><kbd>{modKey}</kbd><kbd>K</kbd>
       </button>
-      </div>
     </motion.nav>
   )
 }

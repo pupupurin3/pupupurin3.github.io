@@ -1,6 +1,5 @@
 import { Fragment, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import Viewfinder from '../tv/Viewfinder'
 import { modKey } from './CommandPalette'
 import { profile, projects } from '../data/content'
 
@@ -86,7 +85,6 @@ export default function Hero({ start }) {
       >
         <TiltCard>
           <div className="hero-grid" />
-          <Viewfinder />
           <img src={profile.heroImage} alt="3D diorama of a street corner with a utility pole, balcony, plants and an air conditioner" />
         </TiltCard>
         <figcaption>{profile.heroCaption}</figcaption>

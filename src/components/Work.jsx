@@ -41,9 +41,6 @@ function Card({ project, onOpen }) {
           {project.model && <span className="pill">3D</span>}
         </motion.div>
         <div className="card-body">
-          <div className="vhs-strip" style={{ '--c': project.color }} aria-hidden="true">
-            <b>VHS</b><span>SP · T-120</span><i />
-          </div>
           <motion.h3 layoutId={`title-${id}`}>{project.title}</motion.h3>
           <p className="card-meta">{project.category}{project.status ? ` · ${project.status}` : ''}</p>
           <p className="card-blurb">{project.blurb}</p>
@@ -112,13 +109,6 @@ export default function Work() {
     window.addEventListener('open-project', onOpen)
     return () => window.removeEventListener('open-project', onOpen)
   }, [])
-
-  // Opening a project plays it like a tape: a quick burst of static.
-  useEffect(() => {
-    if (!open) return
-    window.dispatchEvent(new CustomEvent('tv-static', { detail: 220 }))
-    window.dispatchEvent(new CustomEvent('tv-osd', { detail: `▶ PLAY  ${open.title.toUpperCase()}` }))
-  }, [open])
 
   const filtered = projects.filter((p) => filter === 'All' || p.category === filter || (filter === '3D' && p.model))
   const shown = filter === 'All' && !showAll ? filtered.filter((p) => p.featured) : filtered

@@ -5,12 +5,6 @@ import Work from './components/Work'
 import Lab from './components/Lab'
 import CommandPalette from './components/CommandPalette'
 import PlayLayer from './components/PlayLayer'
-import { TVProvider } from './tv/TVContext'
-import CRT from './tv/CRT'
-import OSD from './tv/OSD'
-import Remote from './tv/Remote'
-import TVMenu from './tv/TVMenu'
-import PowerScreen from './tv/PowerScreen'
 import { About, Contact, Nav, ScrollProgress, SectionHeader, Toast } from './components/Sections'
 
 export default function App() {
@@ -24,22 +18,22 @@ export default function App() {
   }, [])
 
   return (
-    <TVProvider>
+    <>
       <LoadingScreen onDone={() => setStarted(true)} />
       <ScrollProgress />
       <Nav show={started} />
       <main>
         <Hero start={started} />
         <section id="work" className="section">
-          <SectionHeader index="02" title="Selected work" lede="Games, simulations and tools I’ve built. Open a project for details and source." />
+          <SectionHeader index="01" title="Selected work" lede="Games, simulations and tools I’ve built. Open a project for details and source." />
           <Work />
         </section>
         <section id="lab" className="section">
-          <SectionHeader index="03" title="Lab" lede="Interactive experiments in 3D, motion and gesture-driven UI, each built from scratch for this site." />
+          <SectionHeader index="02" title="Lab" lede="Interactive experiments in 3D, motion and gesture-driven UI, each built from scratch for this site." />
           <Lab />
         </section>
         <section id="about" className="section">
-          <SectionHeader index="04" title="About" />
+          <SectionHeader index="03" title="About" />
           <About />
         </section>
         <section id="contact" className="section">
@@ -49,11 +43,6 @@ export default function App() {
       <PlayLayer show={started} onToast={showToast} />
       <CommandPalette onToast={showToast} />
       <Toast message={toast} />
-      {started && <OSD />}
-      {started && <Remote />}
-      <TVMenu />
-      <PowerScreen />
-      <CRT />
-    </TVProvider>
+    </>
   )
 }
