@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState } from 'react'
+import { Component, Suspense, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useInView } from 'framer-motion'
 import { ContactShadows, Html, OrbitControls, useProgress } from '@react-three/drei'
@@ -14,6 +14,17 @@ function ViewerLoader() {
       </div>
     </Html>
   )
+}
+
+// A model that fails to load shows a note instead of taking the page down.
+class ModelBoundary extends Component {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  componentDidUpdate(prev) { if (prev.model !== this.props.model && this.state.failed) this.setState({ failed: false }) }
+  render() {
+    if (!this.state.failed) return this.props.children
+    return <Html center><div className="viewer-loader"><span>Couldn't load this model</span></div></Html>
+  }
 }
 
 // Drag to orbit, scroll or pinch to zoom, with a few showcase toggles.
@@ -32,9 +43,11 @@ export default function ModelViewer({ model, className = '' }) {
         <hemisphereLight args={['#cfe6ff', '#1b2333', 0.9]} />
         <directionalLight position={[3, 5, 2]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} />
         <directionalLight position={[-3, 2, -2]} intensity={0.6} color="#7fb8ff" />
-        <Suspense fallback={<ViewerLoader />}>
-          <Model key={model} model={model} wireframe={wireframe} />
-        </Suspense>
+        <ModelBoundary model={model}>
+          <Suspense fallback={<ViewerLoader />}>
+            <Model key={model} model={model} wireframe={wireframe} />
+          </Suspense>
+        </ModelBoundary>
         <ContactShadows position={[0, -0.62, 0]} opacity={0.5} scale={6} blur={2.4} far={2} />
         <OrbitControls
           ref={controls}

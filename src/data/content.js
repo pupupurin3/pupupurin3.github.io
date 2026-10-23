@@ -15,7 +15,7 @@ export const profile = {
   heroImage: asset('img/hero-model.png'),
   // Live model in the header (exported from Maya as OBJ, converted to .glb).
   heroModel: asset('models/street-corner.glb'),
-  heroCaption: 'Street corner diorama, modelled by me in Maya',
+  heroCaption: 'donut.c, rebuilt for the web. Try poking it.',
   avatar: asset('img/avatar.jpg'),
   email: 'noah.mtskm@gmail.com',
   github: 'https://github.com/pupupurin3',
@@ -210,6 +210,7 @@ export const projects = [
 // Models shown in the 3D Gallery. Add your own by exporting a .glb from
 // Blender into /public/models and adding { name, model: '/models/x.glb' }.
 export const gallery = [
+  { name: 'Street Corner', model: profile.heroModel, note: 'Diorama modelled in Maya' },
   { name: 'Purin', model: 'purin', note: 'Voxel pudding mascot' },
   { name: 'Mars Terrain', model: 'mars', note: 'Procedural low-poly terrain' },
   { name: 'Maze', model: 'maze', note: 'Generated 3D maze' },

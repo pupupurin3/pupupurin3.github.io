@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { motion } from 'framer-motion'
-import HeroModel from './HeroModel'
+import AsciiDonut from './AsciiDonut'
 import { modKey } from './CommandPalette'
 import { profile, projects } from '../data/content'
 
@@ -59,11 +59,7 @@ export default function Hero({ start }) {
       >
         <div className="tilt-card">
           <div className="hero-grid" />
-          <HeroModel
-            url={profile.heroModel}
-            poster={profile.heroImage}
-            alt="3D diorama of a street corner with a utility pole, balcony, plants, an air conditioner and a vending machine"
-          />
+          <AsciiDonut start={start} />
         </div>
         <figcaption>{profile.heroCaption}</figcaption>
       </motion.figure>

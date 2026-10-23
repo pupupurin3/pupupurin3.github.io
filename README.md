@@ -38,7 +38,7 @@ with a real description.
 | `src/components/Lab.jsx` | Tabbed experiments: tape shelf, model viewer, scroll-linked text, spring physics |
 | `src/components/TapeShelf.jsx` | 3D shelf of cassette tapes with hover, filter flip and a Now Playing popup |
 | `src/components/Cassette.jsx` | Procedural cassette with a generated label, or your `.glb` |
-| `src/components/HeroModel.jsx` | The header diorama as a live, draggable model (`public/models/street-corner.glb`); the flat render shows until it loads |
+| `src/components/AsciiDonut.jsx` | The header's spinning ASCII donut (donut.c on a canvas); each character is a spring that the cursor pushes away and a click scatters |
 | `src/components/PlayLayer.jsx` | Optional platformer over the real page (P or the Play button): Purin jumps on headings and cards, collects 8 stars and opens projects from their cards |
 | `src/components/CommandPalette.jsx` | ⌘K / Ctrl+K fuzzy search over sections, projects and links (the phone menu too) |
 | `src/components/Sections.jsx` | Nav, About (bio, skills, experience, education), contact, toast |
