@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useProgress } from '@react-three/drei'
 import { profile } from '../data/content'
@@ -15,7 +15,15 @@ export default function LoadingScreen({ onDone }) {
   const [ready, setReady] = useState(false)
   const [time, setTime] = useState(0)
   const [visible, setVisible] = useState(true)
+  const [gone, setGone] = useState(false)
   const [timedOut, setTimedOut] = useState(false)
+  const finished = useRef(false)
+  const finish = () => {
+    if (finished.current) return
+    finished.current = true
+    setGone(true)
+    onDone?.()
+  }
 
   useEffect(() => {
     const loaded = new Promise((r) => (document.readyState === 'complete' ? r() : window.addEventListener('load', r, { once: true })))
@@ -23,12 +31,13 @@ export default function LoadingScreen({ onDone }) {
     const giveUp = setTimeout(() => setTimedOut(true), MAX_WAIT)
     const t0 = performance.now()
     let raf
-    const tick = () => {
-      setTime(Math.min((performance.now() - t0) / MIN_DURATION, 1))
-      raf = requestAnimationFrame(tick)
-    }
+    const update = () => setTime(Math.min((performance.now() - t0) / MIN_DURATION, 1))
+    const tick = () => { update(); raf = requestAnimationFrame(tick) }
     raf = requestAnimationFrame(tick)
-    return () => { cancelAnimationFrame(raf); clearTimeout(giveUp) }
+    // Timers keep running where animation frames are paused (background or
+    // off-screen frames), so the intro can never get stuck.
+    const timer = setInterval(update, 200)
+    return () => { cancelAnimationFrame(raf); clearInterval(timer); clearTimeout(giveUp) }
   }, [])
 
   const eased = 1 - Math.pow(1 - time, 3)
@@ -40,11 +49,15 @@ export default function LoadingScreen({ onDone }) {
   useEffect(() => {
     if (!done) return
     const t = setTimeout(() => setVisible(false), 250)
-    return () => clearTimeout(t)
+    // The exit animation normally calls onDone; this covers it not running.
+    const f = setTimeout(finish, 250 + 1400)
+    return () => { clearTimeout(t); clearTimeout(f) }
   }, [done])
 
+  if (gone) return null
+
   return (
-    <AnimatePresence onExitComplete={onDone}>
+    <AnimatePresence onExitComplete={finish}>
       {visible && (
         <motion.div
           className="loader"
