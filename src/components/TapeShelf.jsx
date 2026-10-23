@@ -124,7 +124,6 @@ function TapeViewer({ project }) {
   return (
     <div className="model-viewer tape-viewer">
       <Canvas camera={{ position: [0, 0.1, 1.9], fov: 35 }} dpr={[1, 2]}>
-        <color attach="background" args={['#111214']} />
         <hemisphereLight args={['#ffffff', '#222', 1]} />
         <directionalLight position={[2, 3, 3]} intensity={2.4} />
         <Suspense fallback={null}>

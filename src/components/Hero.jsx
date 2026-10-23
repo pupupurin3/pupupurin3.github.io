@@ -32,6 +32,7 @@ export default function Hero({ start }) {
 
   return (
     <section id="home" className="hero">
+      <AsciiDonut start={start} />
       <div className="hero-text">
         <motion.p className="eyebrow" {...fade(0.1)}>
           <span className="status-dot" /> {profile.roles.join(' · ')}
@@ -51,18 +52,6 @@ export default function Hero({ start }) {
         </motion.dl>
       </div>
 
-      <motion.figure
-        className="hero-figure"
-        initial={{ opacity: 0, scale: 0.94, clipPath: 'inset(12% 12% 12% 12% round 20px)' }}
-        animate={start ? { opacity: 1, scale: 1, clipPath: 'inset(0% 0% 0% 0% round 20px)' } : {}}
-        transition={{ duration: 1.1, delay: 0.3, ease }}
-      >
-        <div className="tilt-card">
-          <div className="hero-grid" />
-          <AsciiDonut start={start} />
-        </div>
-        <figcaption>{profile.heroCaption}</figcaption>
-      </motion.figure>
     </section>
   )
 }

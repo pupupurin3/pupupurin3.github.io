@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 // Elements whose top edge is a platform. Headings use their text lines so
 // Purin stands on the words, not on the full-width block.
 const SOLID = [
-  '.btn', '.card', '.tilt-card', '.hero-stats', '.segmented', '.lab-tabs', '.cv-item',
+  '.btn', '.card', '.hero-stats', '.segmented', '.lab-tabs', '.cv-item',
   '.reorder-item', '.throw-area', '.shelf-frame', '.gallery', '.scroll-demo', '.about-person',
   '.tags span', '.section-index',
 ].join(',')
@@ -19,7 +19,7 @@ const TEXT = 'h1, h2, h3, .contact-title'
 // Where the stars float: [selector, horizontal position 0..1 across it].
 const STARS = [
   ['#home h1', 0.15],
-  ['.hero-figure', 0.7],
+  ['.hero-stats', 0.7],
   ['#work .section-header h2', 0.9],
   ['#work .card', 0.5],
   ['.lab-tabs', 0.85],

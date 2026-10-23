@@ -15,7 +15,6 @@ export const profile = {
   heroImage: asset('img/hero-model.png'),
   // Live model in the header (exported from Maya as OBJ, converted to .glb).
   heroModel: asset('models/street-corner.glb'),
-  heroCaption: 'donut.c, rebuilt for the web. Try poking it.',
   avatar: asset('img/avatar.jpg'),
   email: 'noah.mtskm@gmail.com',
   github: 'https://github.com/pupupurin3',
