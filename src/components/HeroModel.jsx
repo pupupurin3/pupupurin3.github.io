@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Component, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { ContactShadows, OrbitControls, useGLTF } from '@react-three/drei'
 import { useInView, useReducedMotion } from 'framer-motion'
@@ -10,6 +10,18 @@ import * as THREE from 'three'
 // The flat render stays underneath as a poster until the model has loaded.
 
 const HEIGHT = 2.2
+
+// If the model can't be fetched or parsed, render nothing and leave the
+// poster showing. Without this a loader error would unmount the whole app.
+class ModelBoundary extends Component {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  componentDidCatch(err) {
+    console.warn('Header model failed to load:', err?.message || err)
+    this.props.onError?.()
+  }
+  render() { return this.state.failed ? null : this.props.children }
+}
 
 function Diorama({ url, onReady }) {
   const { scene } = useGLTF(url)
@@ -42,6 +54,7 @@ export default function HeroModel({ url, poster, alt }) {
   const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
   const [interacted, setInteracted] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   return (
     <div ref={wrap} className={`hero-stage ${ready ? 'ready' : ''}`}>
@@ -69,9 +82,11 @@ export default function HeroModel({ url, poster, alt }) {
           shadow-normalBias={0.02}
         />
         <directionalLight position={[4, 2, -3]} intensity={0.5} color="#8ab4ff" />
-        <Suspense fallback={null}>
-          <Diorama url={url} onReady={() => setReady(true)} />
-        </Suspense>
+        <ModelBoundary onError={() => setFailed(true)}>
+          <Suspense fallback={null}>
+            <Diorama url={url} onReady={() => setReady(true)} />
+          </Suspense>
+        </ModelBoundary>
         <ContactShadows position={[0, 0.001, 0]} opacity={0.55} scale={5} blur={2.2} far={1.5} />
         <OrbitControls
           ref={controls}
@@ -85,7 +100,7 @@ export default function HeroModel({ url, poster, alt }) {
           maxPolarAngle={Math.PI * 0.49}
         />
       </Canvas>
-      <div className={`hero-stage-hint ${interacted ? 'hide' : ''}`} aria-hidden="true">Drag to rotate</div>
+      <div className={`hero-stage-hint ${interacted || failed ? 'hide' : ''}`} aria-hidden="true">Drag to rotate</div>
     </div>
   )
 }
