@@ -70,10 +70,13 @@ export const education = [
 // Categories drive the filter tabs in the Projects section.
 // Photos for the sticker stack in About. Edit captions and alt text here;
 // drop new images into public/img/ and add them to the list.
+// Cut-out photos: a transparent PNG of the people plus a rough polygon (clip
+// path) for the paper-cut backing behind them. `w` and `h` are the image size.
 export const aboutPhotos = [
-  { src: asset('img/about-beach.jpg'), alt: 'Three friends posing with a hand under the chin on a boardwalk leading to the beach', caption: 'Beach day' },
-  { src: asset('img/about-diving.jpg'), alt: 'Three scuba divers posing underwater above a coral reef', caption: 'Scuba diving' },
-  { src: asset('img/about-tokyo.jpg'), alt: 'Smiling and holding up a peace sign in front of a giant white Gundam statue', caption: 'Gundam, Tokyo' },
+  { src: asset('img/cut-beach.webp'), w: 640, h: 442, backing: 'polygon(17.2% 14.8%, 21.4% 50.9%, 0.0% 99.8%, 99.9% 99.8%, 99.9% 44.3%, 84.3% 21.3%, 54.1% 13.4%, 46.4% 37.5%, 38.2% 9.2%)', alt: 'Three friends posing with a hand under the chin on a boardwalk leading to the beach', caption: 'Beach day' },
+  // Underwater shot: kept whole (a cut-out would lose the divers), torn to a rough shape instead.
+  { src: asset('img/about-diving.jpg'), w: 900, h: 675, clip: 'polygon(4% 10%, 36% 5%, 68% 9%, 96% 5%, 97% 46%, 93% 94%, 56% 91%, 21% 95%, 4% 85%, 7% 50%)', backing: 'polygon(1% 7%, 36% 0%, 69% 5%, 99% 0%, 100% 48%, 97% 100%, 56% 96%, 20% 100%, 0% 88%, 3% 50%)', alt: 'Three scuba divers posing underwater above a coral reef', caption: 'Scuba diving' },
+  { src: asset('img/cut-tokyo.webp'), w: 640, h: 604, backing: 'polygon(64.2% 9.0%, 40.9% 9.2%, 30.7% 40.7%, 0.0% 43.6%, 0.0% 99.8%, 84.3% 99.8%, 93.8% 51.6%, 62.7% 53.1%, 72.7% 26.0%)', alt: 'Smiling and holding up a peace sign in front of a giant white Gundam statue', caption: 'Gundam, Tokyo' },
 ]
 
 export const categories = ['All', 'Games', 'Simulations', 'Apps', '3D']

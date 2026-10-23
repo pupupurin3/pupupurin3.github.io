@@ -1,5 +1,6 @@
 /* Light is the default theme; dark is opt-in via the nav switch. */
 :root {
+  --sticker-back: #2f3a4f;
   color-scheme: light;
   --bg: #fafaf9;
   --surface: #ffffff;
@@ -27,6 +28,7 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 :root[data-theme="dark"] {
+  --sticker-back: #46536d;
   color-scheme: dark;
   --bg: #0a0a0b;
   --surface: #111214;
@@ -341,15 +343,10 @@ kbd {
 .about-cv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
 .about-bio > p { color: var(--muted); margin-bottom: 16px; }
 .photo-stack { position: relative; width: 100%; max-width: 640px; aspect-ratio: 1 / 0.98; justify-self: center; touch-action: pan-y; }
-/* Sticker: a thick white die-cut border, a hairline outside it, and a soft shadow. */
-.sticker {
-  position: absolute; width: 64%; margin: 0; padding: 9px 9px 0; background: #fff; border-radius: 16px; cursor: grab;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.1), 0 16px 28px -10px rgba(0, 0, 0, 0.45);
-  user-select: none; -webkit-user-select: none;
-}
-.sticker img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 9px; pointer-events: none; display: block; }
-.sticker figcaption { padding: 9px 4px 11px; font-family: var(--mono); font-size: 0.78rem; color: #3a3a40; text-align: center; }
-.sticker::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, rgba(255, 255, 255, 0.55), transparent 28%); mix-blend-mode: soft-light; }
+/* Sticker: a cut-out of the people over a rough paper-cut backing, lifted by a soft shadow. */
+.sticker { position: absolute; margin: 0; cursor: grab; user-select: none; -webkit-user-select: none; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.28)); }
+.sticker-back { position: absolute; inset: 0; background: var(--sticker-back); transform: scale(1.04); }
+.sticker img { position: relative; width: 100%; height: 100%; object-fit: contain; pointer-events: none; display: block; }
 .about-person { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 .about-person strong { display: block; font-weight: 600; }
 .about-person span { font-size: 0.85rem; color: var(--faint); }
@@ -367,7 +364,6 @@ kbd {
 .cv-detail { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
 .cv-item .tags { margin-top: 10px; }
 @media (max-width: 860px) { .about { gap: 40px; } .about-top, .about-cv { grid-template-columns: 1fr; gap: 36px; } }
-@media (max-width: 480px) { .sticker { width: 68%; padding: 6px 6px 0; } .sticker figcaption { padding: 6px 4px 8px; font-size: 0.68rem; } }
 
 /* ---------- Contact ---------- */
 .contact { padding-top: 40px; border-top: 1px solid var(--border); }

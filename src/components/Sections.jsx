@@ -118,9 +118,9 @@ export function Nav({ show }) {
 // around, springing back to its place on release.
 // Positions are percentages of the stack so it scales with its column.
 const POSE = [
-  { x: 0, y: 6, r: -6 },
-  { x: 36, y: 0, r: 4 },
-  { x: 14, y: 40, r: -2 },
+  { x: 0, y: 28, r: -4, w: 64 },
+  { x: 42, y: 56, r: 3, w: 56 },
+  { x: 52, y: 0, r: 4, w: 46 },
 ]
 
 function PhotoStack() {
@@ -134,7 +134,7 @@ function PhotoStack() {
           <motion.figure
             key={ph.src}
             className="sticker"
-            style={{ left: `${pose.x}%`, top: `${pose.y}%`, zIndex: order.indexOf(i) + 1 }}
+            style={{ left: `${pose.x}%`, top: `${pose.y}%`, width: `${pose.w}%`, aspectRatio: `${ph.w} / ${ph.h}`, zIndex: order.indexOf(i) + 1 }}
             initial={{ rotate: pose.r * 2.2, scale: 0.9 }}
             whileInView={{ rotate: pose.r, scale: 1 }}
             viewport={{ once: true, amount: 0.4 }}
@@ -148,8 +148,8 @@ function PhotoStack() {
             onDragStart={() => front(i)}
             onTap={() => front(i)}
           >
-            <img src={ph.src} alt={ph.alt} loading="lazy" draggable="false" />
-            <figcaption>{ph.caption}</figcaption>
+            <span className="sticker-back" style={{ clipPath: ph.backing }} aria-hidden="true" />
+            <img src={ph.src} alt={ph.alt} loading="lazy" draggable="false" style={ph.clip ? { clipPath: ph.clip } : undefined} />
           </motion.figure>
         )
       })}
