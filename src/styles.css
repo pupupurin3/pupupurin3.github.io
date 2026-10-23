@@ -338,6 +338,16 @@ kbd {
 /* ---------- About ---------- */
 .about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; }
 .about-bio > p { color: var(--muted); margin-bottom: 16px; }
+.photo-stack { position: relative; height: 410px; margin: 36px 0 28px; max-width: 520px; touch-action: pan-y; }
+/* Sticker: a thick white die-cut border, a hairline outside it, and a soft shadow. */
+.sticker {
+  position: absolute; width: 62%; margin: 0; padding: 7px 7px 0; background: #fff; border-radius: 16px; cursor: grab;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.1), 0 16px 28px -10px rgba(0, 0, 0, 0.45);
+  user-select: none; -webkit-user-select: none;
+}
+.sticker img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; pointer-events: none; display: block; }
+.sticker figcaption { padding: 7px 4px 8px; font-family: var(--mono); font-size: 0.7rem; color: #3a3a40; text-align: center; }
+.sticker::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, rgba(255, 255, 255, 0.55), transparent 28%); mix-blend-mode: soft-light; }
 .about-person { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 .about-person strong { display: block; font-weight: 600; }
 .about-person span { font-size: 0.85rem; color: var(--faint); }
@@ -355,6 +365,7 @@ kbd {
 .cv-detail { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
 .cv-item .tags { margin-top: 10px; }
 @media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 480px) { .photo-stack { height: 360px; } .sticker { width: 66%; } }
 
 /* ---------- Contact ---------- */
 .contact { padding-top: 40px; border-top: 1px solid var(--border); }

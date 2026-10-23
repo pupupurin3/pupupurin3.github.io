@@ -68,6 +68,14 @@ export const education = [
 ]
 
 // Categories drive the filter tabs in the Projects section.
+// Photos for the sticker stack in About. Edit captions and alt text here;
+// drop new images into public/img/ and add them to the list.
+export const aboutPhotos = [
+  { src: asset('img/about-beach.jpg'), alt: 'Three friends posing with a hand under the chin on a boardwalk leading to the beach', caption: 'Beach day' },
+  { src: asset('img/about-diving.jpg'), alt: 'Three scuba divers posing underwater above a coral reef', caption: 'Scuba diving' },
+  { src: asset('img/about-tokyo.jpg'), alt: 'Smiling and holding up a peace sign in front of a giant white Gundam statue', caption: 'Gundam, Tokyo' },
+]
+
 export const categories = ['All', 'Games', 'Simulations', 'Apps', '3D']
 
 // `model` (optional) opens an interactive 3D viewer in the project popup.

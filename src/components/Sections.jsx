@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { modKey } from './CommandPalette'
-import { education, experience, profile, skills } from '../data/content'
+import { aboutPhotos, education, experience, profile, skills } from '../data/content'
 import { getTheme, toggleTheme } from '../theme'
 
 const ease = [0.22, 1, 0.36, 1]
@@ -113,6 +113,49 @@ export function Nav({ show }) {
   )
 }
 
+// Photos as overlapping sticker cards. Hover lifts and straightens one, click
+// (or a quick tap) brings it to the front, and each can be dragged and flicked
+// around, springing back to its place on release.
+const POSE = [
+  { x: -8, y: 8, r: -6 },
+  { x: 120, y: -4, r: 4 },
+  { x: 52, y: 128, r: -2 },
+]
+
+function PhotoStack() {
+  const [order, setOrder] = useState(() => aboutPhotos.map((_, i) => i))
+  const front = (i) => setOrder((o) => [...o.filter((j) => j !== i), i])
+  return (
+    <Reveal className="photo-stack">
+      {aboutPhotos.map((ph, i) => {
+        const pose = POSE[i % POSE.length]
+        return (
+          <motion.figure
+            key={ph.src}
+            className="sticker"
+            style={{ left: pose.x, top: pose.y, zIndex: order.indexOf(i) + 1 }}
+            initial={{ rotate: pose.r * 2.2, scale: 0.9 }}
+            whileInView={{ rotate: pose.r, scale: 1 }}
+            viewport={{ once: true, amount: 0.4 }}
+            whileHover={{ rotate: 0, scale: 1.04, y: -6 }}
+            whileDrag={{ scale: 1.08, rotate: pose.r * 0.4, cursor: 'grabbing' }}
+            drag
+            dragSnapToOrigin
+            dragElastic={0.5}
+            dragTransition={{ bounceStiffness: 260, bounceDamping: 18 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 22, delay: i * 0.08 }}
+            onDragStart={() => front(i)}
+            onTap={() => front(i)}
+          >
+            <img src={ph.src} alt={ph.alt} loading="lazy" draggable="false" />
+            <figcaption>{ph.caption}</figcaption>
+          </motion.figure>
+        )
+      })}
+    </Reveal>
+  )
+}
+
 export function About() {
   return (
     <div className="about">
@@ -125,6 +168,7 @@ export function About() {
           </div>
         </Reveal>
         {profile.bio.map((p, i) => <Reveal key={i} as="p" delay={0.05 * i}>{p}</Reveal>)}
+        {aboutPhotos.length > 0 && <PhotoStack />}
         <Reveal className="skills">
           {skills.map((s) => (
             <div key={s.group} className="skill-group">
