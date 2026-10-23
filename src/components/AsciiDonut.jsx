@@ -149,7 +149,7 @@ export default function AsciiDonut({ start = true }) {
       tiltX += (pointer.tx * 0.5 - tiltX) * 0.06
       tiltY += (pointer.ty * 0.4 - tiltY) * 0.06
       spin *= 0.94
-      if (!reduced) { A += 0.01 + spin * 0.6; B += 0.005 + spin * 0.3 }
+      if (!reduced) { A += 0.004 + spin * 0.5; B += 0.002 + spin * 0.25 }
       renderDonut()
 
       if (pointer.inside) {
@@ -205,7 +205,7 @@ export default function AsciiDonut({ start = true }) {
       const dx = x - pointer.x, dy = y - pointer.y
       pointer.x = x; pointer.y = y; pointer.inside = true
       pointer.tx = (x / w - 0.5) * 2; pointer.ty = (y / h - 0.5) * 2
-      if (Number.isFinite(dx)) spin = Math.min(0.08, spin + Math.hypot(dx, dy) * 0.0004)
+      if (Number.isFinite(dx)) spin = Math.min(0.04, spin + Math.hypot(dx, dy) * 0.0002)
       kick()
     }
     const onLeave = () => { pointer.inside = false; pointer.x = pointer.y = -1e4; pointer.tx = pointer.ty = 0; kick() }
@@ -214,7 +214,7 @@ export default function AsciiDonut({ start = true }) {
       if (e.target.closest?.('a, button, input, kbd')) return
       const [x, y] = local(e)
       impulse(x, y, BURST_RADIUS, BURST)
-      spin = 0.08
+      spin = 0.04
       setTouched(true)
       kick()
     }
