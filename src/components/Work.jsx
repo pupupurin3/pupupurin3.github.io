@@ -5,7 +5,7 @@ import { categories, profile, projects } from '../data/content'
 
 const ease = [0.22, 1, 0.36, 1]
 
-function projectLinks(p) {
+export function projectLinks(p) {
   const links = [...(p.links || [])]
   if (p.repo) links.push({ label: 'Source on GitHub', url: `${profile.github}/${p.repo}` })
   return links
@@ -13,7 +13,7 @@ function projectLinks(p) {
 
 // Cover for projects without a screenshot: a quiet gradient in the project's
 // colour with its initials.
-function Cover({ project }) {
+export function Cover({ project }) {
   if (project.image) return <img src={project.image} alt="" loading="lazy" />
   const initials = project.title.split(/\s+/).map((w) => w[0]).join('').slice(0, 2)
   return (

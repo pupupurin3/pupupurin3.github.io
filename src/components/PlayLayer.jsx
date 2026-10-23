@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 // Purin stands on the words, not on the full-width block.
 const SOLID = [
   '.btn', '.card', '.hero-stats', '.segmented', '.lab-tabs', '.cv-item',
-  '.reorder-item', '.throw-area', '.shelf-frame', '.gallery', '.scroll-demo', '.about-person',
+  '.reorder-item', '.throw-area', '.shelf-plank', '.gallery', '.scroll-demo', '.about-person',
   '.tags span', '.section-index',
 ].join(',')
 const TEXT = 'h1, h2, h3, .contact-title'

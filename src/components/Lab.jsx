@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion, Reorder, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import ModelViewer from './ModelViewer'
-import BookShelf from './BookShelf'
+import ProjectShelf from './ProjectShelf'
 import { gallery } from '../data/content'
 
 const ease = [0.22, 1, 0.36, 1]
@@ -101,10 +101,10 @@ function SpringPhysics() {
 const DEMOS = [
   {
     id: 'shelf',
-    name: 'Bookshelf',
-    tech: ['Shared layout animation', 'Springs', 'CSS writing-mode'],
-    about: 'Each project is a book drawn in plain HTML and CSS. Hover one to lift it off the shelf, click to pull it out: its spine morphs into the cover of the details panel. Filtered-out books sink back and fade.',
-    render: () => <BookShelf />,
+    name: 'Project shelf',
+    tech: ['Drag to scroll', 'Shared layout animation', 'Scroll snap'],
+    about: 'Every project as a card standing on one long shelf. Drag it (it keeps gliding after you let go), swipe, or use the arrows. Hover lifts a card off the shelf and clicking grows it into its details.',
+    render: () => <ProjectShelf />,
   },
   {
     id: 'models',
