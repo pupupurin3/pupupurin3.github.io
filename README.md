@@ -1,7 +1,7 @@
 # pupupurin3.github.io
 
 Noah Matsukuma's portfolio: a clean, minimal React site with a Lab section
-that shows off harder front-end work (a 3D bookshelf, a model viewer,
+that shows off harder front-end work (an interactive bookshelf, a model viewer,
 scroll-linked animation, spring physics), a ⌘K command palette and an
 optional platformer you can play on top of the page.
 
@@ -33,7 +33,7 @@ with a real description.
 | `src/components/Hero.jsx` | Masked word reveal, 3D tilt card with the diorama render |
 | `src/components/Work.jsx` | Filterable project grid; cards morph into a detail dialog (shared layout) |
 | `src/components/Lab.jsx` | Tabbed experiments: bookshelf, model viewer, scroll-linked text, spring physics |
-| `src/components/BookShelf.jsx` | 3D bookshelf: each project is a book with a generated spine and cover; hover tips it out, click pulls it off the shelf and opens the details |
+| `src/components/BookShelf.jsx` | 2D bookshelf: each project is a book; hover lifts it, click morphs the spine into the cover of the details panel |
 | `src/components/AsciiDonut.jsx` | The header's spinning ASCII donut (donut.c on a canvas), filling the hero and running off its edges; each character is a spring that the cursor pushes away and a click scatters |
 | `src/theme.js` | Light/dark theme: light by default, the nav switch (or ⌘K "Toggle dark mode") flips it and the choice is remembered |
 | `src/components/PlayLayer.jsx` | Optional platformer over the real page (P or the Play button): Purin jumps on headings and cards, collects 8 stars and opens projects from their cards |

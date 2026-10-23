@@ -101,9 +101,9 @@ function SpringPhysics() {
 const DEMOS = [
   {
     id: 'shelf',
-    name: '3D bookshelf',
-    tech: ['React Three Fiber', 'Raycasting', 'Canvas textures'],
-    about: 'Each project is a book whose spine and cover are drawn at runtime. Books ease toward their pose every frame: hover one to tip it out, click to pull it off the shelf and turn it to its cover. Filtered-out books slide back into the shelf.',
+    name: 'Bookshelf',
+    tech: ['Shared layout animation', 'Springs', 'CSS writing-mode'],
+    about: 'Each project is a book drawn in plain HTML and CSS. Hover one to lift it off the shelf, click to pull it out: its spine morphs into the cover of the details panel. Filtered-out books sink back and fade.',
     render: () => <BookShelf />,
   },
   {
