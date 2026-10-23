@@ -116,10 +116,11 @@ export function Nav({ show }) {
 // Photos as overlapping sticker cards. Hover lifts and straightens one, click
 // (or a quick tap) brings it to the front, and each can be dragged and flicked
 // around, springing back to its place on release.
+// Positions are percentages of the stack so it scales with its column.
 const POSE = [
-  { x: -8, y: 8, r: -6 },
-  { x: 120, y: -4, r: 4 },
-  { x: 52, y: 128, r: -2 },
+  { x: 0, y: 6, r: -6 },
+  { x: 36, y: 0, r: 4 },
+  { x: 14, y: 40, r: -2 },
 ]
 
 function PhotoStack() {
@@ -133,7 +134,7 @@ function PhotoStack() {
           <motion.figure
             key={ph.src}
             className="sticker"
-            style={{ left: pose.x, top: pose.y, zIndex: order.indexOf(i) + 1 }}
+            style={{ left: `${pose.x}%`, top: `${pose.y}%`, zIndex: order.indexOf(i) + 1 }}
             initial={{ rotate: pose.r * 2.2, scale: 0.9 }}
             whileInView={{ rotate: pose.r, scale: 1 }}
             viewport={{ once: true, amount: 0.4 }}
@@ -159,6 +160,7 @@ function PhotoStack() {
 export function About() {
   return (
     <div className="about">
+      <div className="about-top">
       <div className="about-bio">
         <Reveal className="about-person">
           <img src={profile.avatar} alt={`${profile.name} avatar`} className="avatar" />
@@ -168,7 +170,6 @@ export function About() {
           </div>
         </Reveal>
         {profile.bio.map((p, i) => <Reveal key={i} as="p" delay={0.05 * i}>{p}</Reveal>)}
-        {aboutPhotos.length > 0 && <PhotoStack />}
         <Reveal className="skills">
           {skills.map((s) => (
             <div key={s.group} className="skill-group">
@@ -178,22 +179,28 @@ export function About() {
           ))}
         </Reveal>
       </div>
+      {aboutPhotos.length > 0 && <PhotoStack />}
+      </div>
       <div className="about-cv">
-        <Reveal as="h3" className="cv-title">Experience</Reveal>
-        {experience.map((e, i) => (
-          <Reveal key={e.title} delay={0.05 * i} className="cv-item">
-            <div className="cv-head"><h4>{e.title}</h4><span>{e.org}</span></div>
-            <ul>{e.points.map((p) => <li key={p}>{p}</li>)}</ul>
-          </Reveal>
-        ))}
-        <Reveal as="h3" className="cv-title">Education</Reveal>
-        {education.map((e, i) => (
-          <Reveal key={e.school} delay={0.05 * i} className="cv-item">
-            <div className="cv-head"><h4>{e.school}</h4><span>{e.dates}</span></div>
-            {e.detail && <p className="cv-detail">{e.detail}</p>}
-            {e.courses && <div className="tags">{e.courses.map((c) => <span key={c}>{c}</span>)}</div>}
-          </Reveal>
-        ))}
+        <div>
+          <Reveal as="h3" className="cv-title">Experience</Reveal>
+          {experience.map((e, i) => (
+            <Reveal key={e.title} delay={0.05 * i} className="cv-item">
+              <div className="cv-head"><h4>{e.title}</h4><span>{e.org}</span></div>
+              <ul>{e.points.map((p) => <li key={p}>{p}</li>)}</ul>
+            </Reveal>
+          ))}
+        </div>
+        <div>
+          <Reveal as="h3" className="cv-title">Education</Reveal>
+          {education.map((e, i) => (
+            <Reveal key={e.school} delay={0.05 * i} className="cv-item">
+              <div className="cv-head"><h4>{e.school}</h4><span>{e.dates}</span></div>
+              {e.detail && <p className="cv-detail">{e.detail}</p>}
+              {e.courses && <div className="tags">{e.courses.map((c) => <span key={c}>{c}</span>)}</div>}
+            </Reveal>
+          ))}
+        </div>
       </div>
     </div>
   )

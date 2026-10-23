@@ -336,17 +336,19 @@ kbd {
 @media (max-width: 760px) { .physics { grid-template-columns: 1fr; } }
 
 /* ---------- About ---------- */
-.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; }
+.about { display: grid; gap: 64px; }
+.about-top { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; }
+.about-cv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: start; }
 .about-bio > p { color: var(--muted); margin-bottom: 16px; }
-.photo-stack { position: relative; height: 410px; margin: 36px 0 28px; max-width: 520px; touch-action: pan-y; }
+.photo-stack { position: relative; width: 100%; max-width: 640px; aspect-ratio: 1 / 0.98; justify-self: center; touch-action: pan-y; }
 /* Sticker: a thick white die-cut border, a hairline outside it, and a soft shadow. */
 .sticker {
-  position: absolute; width: 62%; margin: 0; padding: 7px 7px 0; background: #fff; border-radius: 16px; cursor: grab;
+  position: absolute; width: 64%; margin: 0; padding: 9px 9px 0; background: #fff; border-radius: 16px; cursor: grab;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.1), 0 16px 28px -10px rgba(0, 0, 0, 0.45);
   user-select: none; -webkit-user-select: none;
 }
-.sticker img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; pointer-events: none; display: block; }
-.sticker figcaption { padding: 7px 4px 8px; font-family: var(--mono); font-size: 0.7rem; color: #3a3a40; text-align: center; }
+.sticker img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 9px; pointer-events: none; display: block; }
+.sticker figcaption { padding: 9px 4px 11px; font-family: var(--mono); font-size: 0.78rem; color: #3a3a40; text-align: center; }
 .sticker::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, rgba(255, 255, 255, 0.55), transparent 28%); mix-blend-mode: soft-light; }
 .about-person { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 .about-person strong { display: block; font-weight: 600; }
@@ -364,8 +366,8 @@ kbd {
 .cv-item li { margin-bottom: 4px; }
 .cv-detail { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
 .cv-item .tags { margin-top: 10px; }
-@media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 32px; } }
-@media (max-width: 480px) { .photo-stack { height: 360px; } .sticker { width: 66%; } }
+@media (max-width: 860px) { .about { gap: 40px; } .about-top, .about-cv { grid-template-columns: 1fr; gap: 36px; } }
+@media (max-width: 480px) { .sticker { width: 68%; padding: 6px 6px 0; } .sticker figcaption { padding: 6px 4px 8px; font-size: 0.68rem; } }
 
 /* ---------- Contact ---------- */
 .contact { padding-top: 40px; border-top: 1px solid var(--border); }
