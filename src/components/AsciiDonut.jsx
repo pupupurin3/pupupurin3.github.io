@@ -50,12 +50,15 @@ export default function AsciiDonut({ start = true }) {
     const box = wrap.current
     const host = box.parentElement
     const ctx = el.getContext('2d')
-    let text = '#111', accent = '#2f6fe4', mono = 'monospace'
+    let text = '#111', accent = '#2f6fe4', mono = 'monospace', invert = true
     const readColors = () => {
       const css = getComputedStyle(document.documentElement)
       text = css.getPropertyValue('--text').trim() || text
       accent = css.getPropertyValue('--accent').trim() || accent
       mono = css.getPropertyValue('--mono').trim() || mono
+      // On a light page the shading flips: lit surfaces get the sparse
+      // characters and shadowed ones the dense, dark ones.
+      invert = document.documentElement.dataset.theme !== 'dark'
     }
     readColors()
 
@@ -172,7 +175,7 @@ export default function AsciiDonut({ start = true }) {
         if (lum[i] < 0) continue
         // Displaced characters glow in the accent colour; resting ones are
         // shaded by how much light hits that part of the surface.
-        const k = off > 6 ? RAMP.length + Math.min(ACCENT_LEVELS - 1, (off / 20) | 0) : lum[i]
+        const k = off > 6 ? RAMP.length + Math.min(ACCENT_LEVELS - 1, (off / 20) | 0) : (invert ? RAMP.length - 1 - lum[i] : lum[i])
         buckets[k * cells + counts[k]++] = i
       }
       ctx.font = `${font}px ${mono}`
@@ -186,7 +189,7 @@ export default function AsciiDonut({ start = true }) {
         for (let j = 0; j < counts[k]; j++) {
           const i = buckets[base + j]
           const c = i % cols, r = (i / cols) | 0
-          ctx.fillText(RAMP[lum[i]], c * cw + cw / 2 + ox[i], r * ch + ch / 2 + oy[i])
+          ctx.fillText(RAMP[invert ? RAMP.length - 1 - lum[i] : lum[i]], c * cw + cw / 2 + ox[i], r * ch + ch / 2 + oy[i])
         }
       }
       ctx.globalAlpha = 1
