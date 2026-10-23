@@ -227,7 +227,7 @@ kbd {
 /* Tape shelf demo */
 .shop-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: start; }
 .shelf-frame { position: relative; width: 100%; border-radius: var(--radius); overflow: hidden; background: var(--surface); border: 1px solid var(--border); }
-.shelf-sign { position: absolute; top: 12px; left: 14px; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
+.shelf-sign { position: absolute; z-index: 1; top: 12px; left: 14px; padding: 2px 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 999px; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }
 .tracklist { list-style: none; margin: 0; padding: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); max-height: 560px; overflow: auto; }
 .tracklist li { transition: opacity 0.25s; }
 .tracklist li.out { opacity: 0.3; }
@@ -243,6 +243,7 @@ kbd {
 .modal-backdrop { position: fixed; inset: 0; z-index: 80; background: var(--scrim); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 20px; }
 .modal { position: relative; width: min(760px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 20px; box-shadow: 0 40px 80px var(--shadow); }
 .np-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px 12px 20px; border-bottom: 1px solid var(--border); }
+.np-swatch { width: 10px; height: 14px; border-radius: 2px; }
 .np-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); }
 .rec-dot { width: 8px; height: 8px; border-radius: 50%; background: #f87171; animation: pulse 1.4s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.3; } }

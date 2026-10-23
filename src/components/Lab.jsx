@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { AnimatePresence, motion, Reorder, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
 import ModelViewer from './ModelViewer'
-import TapeShelf from './TapeShelf'
+import BookShelf from './BookShelf'
 import { gallery } from '../data/content'
 
 const ease = [0.22, 1, 0.36, 1]
@@ -101,10 +101,10 @@ function SpringPhysics() {
 const DEMOS = [
   {
     id: 'shelf',
-    name: '3D tape shelf',
+    name: '3D bookshelf',
     tech: ['React Three Fiber', 'Raycasting', 'Canvas textures'],
-    about: 'Each project is a cassette with a label drawn at runtime. Tapes ease toward their pose every frame: hovered tapes slide out, filtered ones flip around.',
-    render: () => <TapeShelf />,
+    about: 'Each project is a book whose spine and cover are drawn at runtime. Books ease toward their pose every frame: hover one to tip it out, click to pull it off the shelf and turn it to its cover. Filtered-out books slide back into the shelf.',
+    render: () => <BookShelf />,
   },
   {
     id: 'models',
