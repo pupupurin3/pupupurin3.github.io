@@ -111,6 +111,7 @@ kbd {
   padding: 14px max(20px, calc((100vw - var(--max)) / 2));
   border-bottom: 1px solid transparent; transition: background 0.3s, border-color 0.3s;
 }
+.nav.nav-hidden { pointer-events: none; }
 .nav.scrolled { background: var(--glass); backdrop-filter: saturate(160%) blur(14px); border-color: var(--border); }
 .brand { font-weight: 600; letter-spacing: -0.01em; }
 .nav ul { display: flex; gap: 2px; list-style: none; margin: 0; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--glass); }
@@ -145,7 +146,7 @@ kbd {
   --edge: 2.5vw;
   position: relative; overflow: hidden; min-height: max(100svh, 560px); color: #fff;
   display: flex; flex-direction: column; justify-content: space-between;
-  padding: 84px var(--edge) 48px; isolation: isolate; background: #c9d4dc;
+  padding: 44px var(--edge) 48px; isolation: isolate; background: #c9d4dc;
 }
 .hero-photo { position: absolute; inset: 0; z-index: -2; }
 .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
@@ -182,8 +183,8 @@ kbd {
 @keyframes sun-breathe { from { opacity: 0.8; scale: 0.94; } to { opacity: 1; scale: 1.06; } }
 
 .hero-line { position: absolute; display: block; background: rgba(255, 255, 255, 0.75); pointer-events: none; }
-.hero-line-top { left: var(--edge); right: var(--edge); top: 72px; height: 1px; opacity: 0.6; }
-.hero-line-left { left: calc(var(--edge) - 12px); top: 72px; bottom: 32px; width: 1px; opacity: 0.45; }
+.hero-line-top { left: var(--edge); right: var(--edge); top: 30px; height: 1px; opacity: 0.6; }
+.hero-line-left { left: calc(var(--edge) - 12px); top: 30px; bottom: 32px; width: 1px; opacity: 0.45; }
 
 .hero-head { position: relative; padding-top: 8px; }
 .hero-tag { margin: 0 0 1.2vw 0.2em; font-size: 0.8rem; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.85); }
@@ -210,8 +211,9 @@ kbd {
 .hero .btn.primary { background: #fff; color: #142030; border-color: #fff; }
 
 @media (max-width: 640px) {
-  .hero { --edge: 5vw; padding-top: 76px; }
-  .hero-line-top { top: 64px; }
+  .hero { --edge: 5vw; padding-top: 40px; }
+  .hero-line-top { top: 26px; }
+  .hero-line-left { top: 26px; }
   .hero-title { flex-direction: column; gap: 0; font-size: 14.5vw; }
   .hero-sub { margin-top: 4vw; }
   .hero-kanji { font-size: 10vw; }
