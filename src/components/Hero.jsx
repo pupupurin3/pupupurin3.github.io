@@ -1,6 +1,5 @@
 import { Fragment } from 'react'
 import { motion } from 'framer-motion'
-import AsciiDonut from './AsciiDonut'
 import { modKey } from './CommandPalette'
 import { profile, projects } from '../data/content'
 
@@ -32,7 +31,6 @@ export default function Hero({ start }) {
 
   return (
     <section id="home" className="hero">
-      <AsciiDonut start={start} />
       <div className="hero-text">
         <motion.p className="eyebrow" {...fade(0.1)}>
           <span className="status-dot" /> {profile.roles.join(' · ')}

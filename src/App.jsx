@@ -19,6 +19,7 @@ export default function App() {
 
   return (
     <>
+      <PencilFilter />
       <LoadingScreen onDone={() => setStarted(true)} />
       <ScrollProgress />
       <Nav show={started} />
@@ -44,5 +45,41 @@ export default function App() {
       <CommandPalette onToast={showToast} />
       <Toast message={toast} />
     </>
+  )
+}
+
+// Hand-drawn outline: grows the element's silhouette, roughens it with noise
+// and paints it in pencil ink underneath. Used via `filter: url(#pencil)`.
+function PencilFilter() {
+  return (
+    <svg className="svg-defs" aria-hidden="true" focusable="false">
+      <filter id="pencil" x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="2" result="thick" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="7" result="noise" />
+        <feDisplacementMap in="thick" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="rough" />
+        <feFlood className="pencil-ink" />
+        <feComposite in2="rough" operator="in" result="outline" />
+        <feMerge>
+          <feMergeNode in="outline" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      {/* Text version: a paper-coloured gap first, then the pencil line, like a sticker. */}
+      <filter id="pencil-text" x="-10%" y="-20%" width="120%" height="140%" colorInterpolationFilters="sRGB">
+        <feMorphology in="SourceAlpha" operator="dilate" radius="3" result="gap" />
+        <feMorphology in="SourceAlpha" operator="dilate" radius="4.5" result="thick" />
+        <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="3" result="noise" />
+        <feDisplacementMap in="thick" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="rough" />
+        <feFlood className="pencil-ink" />
+        <feComposite in2="rough" operator="in" result="outline" />
+        <feFlood className="pencil-paper" />
+        <feComposite in2="gap" operator="in" result="paper" />
+        <feMerge>
+          <feMergeNode in="outline" />
+          <feMergeNode in="paper" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </svg>
   )
 }
