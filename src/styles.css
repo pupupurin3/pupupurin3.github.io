@@ -2,7 +2,9 @@
 :root {
   --sticker-back: #2f3a4f;
   color-scheme: light;
-  --bg: #fafaf9;
+  --bg: #ffffff;
+  --grid-line: #cfe7f6;
+  --grid-size: 28px;
   --surface: #ffffff;
   --surface-2: #f1f1ef;
   --border: #e5e5e2;
@@ -31,6 +33,7 @@
   --sticker-back: #46536d;
   color-scheme: dark;
   --bg: #0a0a0b;
+  --grid-line: rgba(138, 180, 255, 0.075);
   --surface: #111214;
   --surface-2: #17181b;
   --border: #232428;
@@ -59,6 +62,21 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+/* Graph paper: pastel blue grid on white, fading out towards the viewport edges. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 55%, transparent 100%);
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; padding: 0; }
@@ -93,6 +111,7 @@ kbd {
   padding: 14px max(20px, calc((100vw - var(--max)) / 2));
   border-bottom: 1px solid transparent; transition: background 0.3s, border-color 0.3s;
 }
+.nav.nav-hidden { pointer-events: none; }
 .nav.scrolled { background: var(--glass); backdrop-filter: saturate(160%) blur(14px); border-color: var(--border); }
 .brand { font-weight: 600; letter-spacing: -0.01em; }
 .nav ul { display: flex; gap: 2px; list-style: none; margin: 0; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--glass); }
@@ -120,39 +139,87 @@ kbd {
 }
 
 /* ---------- Hero ---------- */
+/* A washed-out photo poster: huge thin name, kanji under a drawn rule, slow
+   sun rays. The photo is pre-graded (pale blue duotone), so it reads the
+   same in light and dark mode. */
 .hero {
-  position: relative; overflow: hidden; min-height: 100svh; padding: 110px max(20px, calc((100vw - var(--max)) / 2 + 20px)) 60px;
-  display: flex; align-items: center; touch-action: pan-y;
+  --edge: 2.5vw;
+  position: relative; overflow: hidden; min-height: max(100svh, 560px); color: #fff;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 44px var(--edge) 48px; isolation: isolate; background: #c9d4dc;
 }
-.hero-text { position: relative; z-index: 1; max-width: 620px; }
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--muted); margin-bottom: 22px; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.15); }
-.mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
-.mask > span { display: inline-block; }
-.hero h1 { font-size: clamp(2.8rem, 7vw, 5.4rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
-.hero-headline { margin-top: 14px; font-size: clamp(1.25rem, 2.6vw, 1.8rem); font-weight: 500; letter-spacing: -0.02em; color: var(--muted); line-height: 1.3; max-width: 24ch; }
-.hero-intro { margin-top: 22px; max-width: 52ch; color: var(--muted); }
-.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
-.hero-stats { display: flex; flex-wrap: wrap; gap: 28px; margin: 40px 0 0; padding-top: 24px; border-top: 1px solid var(--border); }
-.hero-stats dt { font-size: 0.75rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.08em; }
-.hero-stats dd { margin: 4px 0 0; font-weight: 500; display: flex; gap: 4px; }
-/* ASCII donut: fills the hero behind the text. The overlay fades it out
-   under the text column and into the page at the bottom. */
-.donut-stage { position: absolute; inset: 0; cursor: crosshair; user-select: none; }
-.donut-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.donut-stage::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(0deg, var(--bg), transparent 16%),
-    linear-gradient(180deg, var(--bg) 40px, transparent 130px),
-    linear-gradient(90deg, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 70%, transparent) 42%, transparent 64%);
+.hero-photo { position: absolute; inset: 0; z-index: -2; }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
+/* Darkens only the bottom so the intro and buttons stay readable. */
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(0deg, rgba(28, 40, 54, 0.55), rgba(28, 40, 54, 0.12) 34%, transparent 52%);
 }
-.donut-hint { position: absolute; z-index: 1; right: max(20px, calc((100vw - var(--max)) / 2 + 20px)); bottom: 28px; padding: 4px 12px; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); background: var(--glass); border: 1px solid var(--border); border-radius: 999px; pointer-events: none; transition: opacity 0.4s; white-space: nowrap; }
-.donut-hint.hide { opacity: 0; }
-@media (max-width: 880px) {
-  .hero { align-items: flex-start; padding-top: 96px; padding-bottom: 46svh; min-height: auto; }
-  .donut-stage::after { background: linear-gradient(0deg, var(--bg), transparent 14%), linear-gradient(180deg, color-mix(in srgb, var(--bg) 82%, transparent) 45%, transparent 64%); }
-  .donut-hint { left: 50%; right: auto; translate: -50% 0; }
+
+.sunrays { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.sunrays > span { position: absolute; left: 92%; top: -12%; translate: -50% -50%; border-radius: 50%; }
+.sunrays-glow {
+  width: 90vmax; height: 90vmax;
+  background: radial-gradient(circle, rgba(255, 251, 240, 0.85) 0%, rgba(255, 248, 232, 0.3) 16%, transparent 46%);
+  animation: sun-breathe 9s ease-in-out infinite alternate;
+}
+.sunrays-beams {
+  width: 260vmax; height: 260vmax;
+  background: conic-gradient(from 150deg,
+    transparent 0deg, rgba(255, 250, 238, 0.5) 3deg, transparent 6deg,
+    transparent 11deg, rgba(255, 250, 238, 0.32) 13deg, transparent 17deg,
+    transparent 24deg, rgba(255, 250, 238, 0.55) 27deg, transparent 32deg,
+    transparent 38deg, rgba(255, 250, 238, 0.25) 39.5deg, transparent 42deg,
+    transparent 49deg, rgba(255, 250, 238, 0.42) 52deg, transparent 57deg,
+    transparent 64deg, rgba(255, 250, 238, 0.3) 66deg, transparent 70deg,
+    transparent 360deg);
+  -webkit-mask-image: radial-gradient(circle, #000 3%, rgba(0, 0, 0, 0.55) 20%, transparent 46%);
+  mask-image: radial-gradient(circle, #000 3%, rgba(0, 0, 0, 0.55) 20%, transparent 46%);
+  animation: sun-sway 16s ease-in-out infinite alternate;
+}
+.sunrays-beams-2 { opacity: 0.7; rotate: 12deg; animation: sun-sway-2 23s ease-in-out infinite alternate; }
+@keyframes sun-sway { from { rotate: -5deg; opacity: 0.75; } to { rotate: 6deg; opacity: 1; } }
+@keyframes sun-sway-2 { from { rotate: 16deg; opacity: 0.4; } to { rotate: 4deg; opacity: 0.85; } }
+@keyframes sun-breathe { from { opacity: 0.8; scale: 0.94; } to { opacity: 1; scale: 1.06; } }
+
+.hero-line { position: absolute; display: block; background: rgba(255, 255, 255, 0.75); pointer-events: none; }
+.hero-line-top { left: var(--edge); right: var(--edge); top: 30px; height: 1px; opacity: 0.6; }
+.hero-line-left { left: calc(var(--edge) - 12px); top: 30px; bottom: 32px; width: 1px; opacity: 0.45; }
+
+.hero-head { position: relative; padding-top: 8px; }
+.hero-tag { margin: 0 0 1.2vw 0.2em; font-size: 0.8rem; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.85); }
+.hero-title {
+  margin: 0; font-family: 'Josefin Sans', var(--sans); font-weight: 400;
+  font-size: 9.6vw; line-height: 0.92; letter-spacing: -0.045em; white-space: nowrap;
+  display: flex; gap: 0.5em; text-shadow: 0 0 40px rgba(110, 140, 170, 0.25);
+}
+.hero-word { display: inline-block; }
+.hero-letter { display: inline-block; will-change: transform, opacity, filter; }
+.hero-sub { position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 1.6vw; margin-top: 2.2vw; }
+.hero-line-kanji { position: relative; flex: 1; height: 2px; max-width: 52%; background: rgba(255, 255, 255, 0.85); }
+.hero-kanji {
+  margin: 0; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', 'IPAGothic', sans-serif;
+  font-weight: 400; font-size: clamp(2rem, 6.4vw, 6.2rem); line-height: 1; letter-spacing: -0.045em;
+  display: flex; gap: 0.25em; white-space: nowrap;
+}
+
+.hero-foot { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.hero-intro { margin: 0; max-width: 46ch; color: rgba(255, 255, 255, 0.92); font-size: 0.95rem; text-shadow: 0 1px 12px rgba(20, 30, 45, 0.35); }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero .btn:not(.primary) { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.55); color: #fff; backdrop-filter: blur(8px); }
+.hero .btn:not(.primary):hover { background: rgba(255, 255, 255, 0.28); }
+.hero .btn.primary { background: #fff; color: #142030; border-color: #fff; }
+
+@media (max-width: 640px) {
+  .hero { --edge: 5vw; padding-top: 40px; }
+  .hero-line-top { top: 26px; }
+  .hero-line-left { top: 26px; }
+  .hero-title { flex-direction: column; gap: 0; font-size: 14.5vw; }
+  .hero-sub { margin-top: 4vw; }
+  .hero-kanji { font-size: 10vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunrays > span { animation: none; }
 }
 
 .btn {

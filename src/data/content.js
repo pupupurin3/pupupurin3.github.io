@@ -8,11 +8,14 @@ const asset = (path) => import.meta.env.BASE_URL + path
 
 export const profile = {
   name: 'Noah Matsukuma',
+  nameJa: '松隈 埜天',
   handle: 'Purin',
   roles: ['Game Developer', 'Programmer', '3D Modeller'],
   headline: 'Game developer and 3D artist building interactive worlds.',
   intro: "I'm a high school student at the California Academy of Mathematics and Science. I make games, model 3D scenes and build interactive things for the web.",
   heroImage: asset('img/hero-model.png'),
+  heroPhoto: asset('img/hero-sunfaded.jpg'),
+  heroPhotoTall: asset('img/hero-sunfaded-tall.jpg'),
   // Live model in the header (exported from Maya as OBJ, converted to .glb).
   heroModel: asset('models/street-corner.glb'),
   avatar: asset('img/avatar.jpg'),

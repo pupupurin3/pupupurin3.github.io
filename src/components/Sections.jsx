@@ -71,10 +71,16 @@ const NAV = [
 
 export function Nav({ show }) {
   const [scrolled, setScrolled] = useState(false)
+  const [pastHero, setPastHero] = useState(false)
   const [active, setActive] = useState('')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    // The hero is a full-screen poster, so the bar only slides in once it has scrolled away.
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24)
+      const hero = document.getElementById('home')
+      setPastHero(!hero || window.scrollY > hero.offsetHeight - 72)
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     const io = new IntersectionObserver(
@@ -87,10 +93,10 @@ export function Nav({ show }) {
 
   return (
     <motion.nav
-      className={`nav ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -24, opacity: 0 }}
-      animate={show ? { y: 0, opacity: 1 } : {}}
-      transition={{ duration: 0.6, ease, delay: 0.2 }}
+      className={`nav ${scrolled ? 'scrolled' : ''} ${show && pastHero ? '' : 'nav-hidden'}`}
+      initial={{ y: '-110%', opacity: 0 }}
+      animate={show && pastHero ? { y: 0, opacity: 1 } : { y: '-110%', opacity: 0 }}
+      transition={{ duration: 0.5, ease }}
     >
       <a href="#home" className="brand">Noah Matsukuma</a>
       <ul>
