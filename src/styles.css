@@ -1,4 +1,4 @@
-/* Light is the default theme; dark is opt-in via the nav switch. */
+/* Light theme only. */
 :root {
   --sticker-back: #2f3a4f;
   color-scheme: light;
@@ -28,26 +28,6 @@
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   --max: 1160px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
-:root[data-theme="dark"] {
-  --sticker-back: #46536d;
-  color-scheme: dark;
-  --bg: #0a0a0b;
-  --grid-line: rgba(138, 180, 255, 0.075);
-  --surface: #111214;
-  --surface-2: #17181b;
-  --border: #232428;
-  --border-strong: #34363b;
-  --hover-border: var(--hover-border);
-  --text: #ededef;
-  --muted: #8b8d94;
-  --faint: #5d5f66;
-  --accent: #8ab4ff;
-  --accent-ink: #0a0f1c;
-  --primary-hover: #ffffff;
-  --glass: var(--glass);
-  --scrim: var(--shadow);
-  --shadow: var(--shadow);
 }
 body, .nav, .btn, .card, .tags span, kbd { transition-property: background-color, border-color, color; transition-duration: 0.3s; }
 
@@ -120,11 +100,6 @@ kbd {
 .nav ul a .label { position: relative; }
 .nav-pill { position: absolute; inset: 0; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 999px; }
 .nav-end { justify-self: end; display: flex; align-items: center; gap: 10px; }
-.theme-switch { position: relative; display: flex; align-items: center; justify-content: flex-start; width: 52px; height: 30px; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-2); }
-[data-theme="dark"] .theme-switch { justify-content: flex-end; }
-.theme-switch:hover { border-color: var(--border-strong); }
-.theme-knob { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--surface); color: #e3a008; box-shadow: 0 1px 3px var(--shadow); }
-[data-theme="dark"] .theme-knob { background: var(--border-strong); color: var(--accent); }
 .kbd-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 12px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; transition: border-color 0.2s, color 0.2s; }
 .kbd-btn:hover { color: var(--text); border-color: var(--border-strong); }
 .kbd-btn-text { margin-right: 6px; }
