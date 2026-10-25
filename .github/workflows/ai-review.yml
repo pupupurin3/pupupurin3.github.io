@@ -1,0 +1,90 @@
+name: AI review
+
+# A second AI (Claude, via anthropics/claude-code-action) reviews every PR.
+# It either approves or requests changes. The coding AI fixes what it asks
+# for and pushes, which triggers a fresh review, until it approves.
+# The "AI review" check stays red until the latest AI review is an approval,
+# so branch protection can require it before Noah's final review.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  review:
+    name: AI review
+    # Fork PRs get no secrets, so skip them.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          # Add one of these as a repository secret.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: >-
+            --max-turns 40
+            --allowedTools "Read,Glob,Grep,Bash(git diff:*),Bash(git log:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr review:*),Bash(gh api:*),mcp__github_inline_comment__create_inline_comment"
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            You are the reviewer for this PR on Noah's portfolio site (Vite + React,
+            three.js / react-three-fiber, deployed to GitHub Pages). Another AI wrote
+            the code. Your verdict decides whether it goes back to that AI for fixes
+            or on to Noah for his final review.
+
+            1. Read the diff (`gh pr diff`) and the PR description. Look at the
+               surrounding code where needed.
+            2. Look at your own earlier reviews and inline comments on this PR
+               (`gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews`
+               and `.../comments`). Check whether earlier issues were fixed. Do not
+               raise new nitpicks on code that was already fine last round.
+            3. Look for real problems: bugs, broken builds or imports, runtime errors,
+               broken layout on phone widths, accessibility regressions (missing alt
+               text, keyboard traps, ignoring prefers-reduced-motion), performance
+               problems (huge assets, leaking three.js objects, effects without
+               cleanup), security issues, secrets or personal data (phone numbers,
+               street addresses) in the repo, and changes that do not match what
+               the PR says it does.
+            4. Put each problem as an inline comment on the line, with what is wrong
+               and how to fix it. Label pure style suggestions "nit (non-blocking)".
+            5. Submit exactly one review with `gh pr review`:
+               - `--request-changes` if any blocking problem remains. The body lists
+                 each blocking problem in one line.
+               - `--approve` if nothing blocking remains. Nits alone never block.
+                 The body says "Approved by AI review, ready for Noah." plus any nits.
+               If you have already requested changes 5 or more times on this PR,
+               do not request changes again: approve, and list what is still open
+               under "Left for Noah:" so a human can decide.
+
+            Be concise. Do not edit files or push commits.
+
+      - name: Require AI approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          state=$(gh api "repos/${{ github.repository }}/pulls/$PR/reviews" --paginate \
+            --jq '[.[] | select(.user.type == "Bot" and .commit_id == env.HEAD_SHA) | select(.state == "APPROVED" or .state == "CHANGES_REQUESTED")] | last | .state // "NONE"')
+          echo "Latest AI review: $state"
+          if [ "$state" != "APPROVED" ]; then
+            echo "::error::The AI reviewer has not approved this PR yet."
+            exit 1
+          fi
