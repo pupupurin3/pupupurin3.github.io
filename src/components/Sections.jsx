@@ -2,31 +2,8 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { modKey } from './CommandPalette'
 import { aboutPhotos, education, experience, profile, skills } from '../data/content'
-import { getTheme, toggleTheme } from '../theme'
 
 const ease = [0.22, 1, 0.36, 1]
-
-// Sun/moon switch. The knob slides across and the icon swaps.
-function ThemeSwitch() {
-  const [theme, setThemeState] = useState(getTheme)
-  useEffect(() => {
-    const sync = () => setThemeState(getTheme())
-    window.addEventListener('theme-change', sync)
-    return () => window.removeEventListener('theme-change', sync)
-  }, [])
-  const dark = theme === 'dark'
-  return (
-    <button className="theme-switch" role="switch" aria-checked={dark} aria-label="Dark mode" onClick={toggleTheme}>
-      <motion.span className="theme-knob" layout transition={{ type: 'spring', stiffness: 500, damping: 32 }}>
-        {dark ? (
-          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></svg>
-        ) : (
-          <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor" /><g stroke="currentColor" strokeWidth="2" strokeLinecap="round">{[0, 45, 90, 135, 180, 225, 270, 315].map((a) => <line key={a} x1="12" y1="2.5" x2="12" y2="4.5" transform={`rotate(${a} 12 12)`} />)}</g></svg>
-        )}
-      </motion.span>
-    </button>
-  )
-}
 
 // Fades and lifts children into place the first time they scroll into view.
 export function Reveal({ children, delay = 0, className, as = 'div' }) {
@@ -71,10 +48,16 @@ const NAV = [
 
 export function Nav({ show }) {
   const [scrolled, setScrolled] = useState(false)
+  const [pastHero, setPastHero] = useState(false)
   const [active, setActive] = useState('')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    // The hero is a full-screen poster, so the bar only slides in once it has scrolled away.
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24)
+      const hero = document.getElementById('home')
+      setPastHero(!hero || window.scrollY > hero.offsetHeight - 72)
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     const io = new IntersectionObserver(
@@ -87,10 +70,10 @@ export function Nav({ show }) {
 
   return (
     <motion.nav
-      className={`nav ${scrolled ? 'scrolled' : ''}`}
-      initial={{ y: -24, opacity: 0 }}
-      animate={show ? { y: 0, opacity: 1 } : {}}
-      transition={{ duration: 0.6, ease, delay: 0.2 }}
+      className={`nav ${scrolled ? 'scrolled' : ''} ${show && pastHero ? '' : 'nav-hidden'}`}
+      initial={{ y: '-110%', opacity: 0 }}
+      animate={show && pastHero ? { y: 0, opacity: 1 } : { y: '-110%', opacity: 0 }}
+      transition={{ duration: 0.5, ease }}
     >
       <a href="#home" className="brand">Noah Matsukuma</a>
       <ul>
@@ -104,7 +87,6 @@ export function Nav({ show }) {
         ))}
       </ul>
       <div className="nav-end">
-      <ThemeSwitch />
       <button className="kbd-btn" onClick={() => window.dispatchEvent(new Event('open-palette'))} aria-label="Open command palette">
         <span className="kbd-btn-text">Search</span><span className="kbd-btn-menu">Menu</span><kbd>{modKey}</kbd><kbd>K</kbd>
       </button>

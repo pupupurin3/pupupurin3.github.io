@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { profile, projects } from '../data/content'
-import { toggleTheme } from '../theme'
 
 export const modKey = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl'
 
@@ -14,7 +13,6 @@ function buildCommands(copyEmail) {
     { group: 'Navigate', label: 'Lab', run: go('lab') },
     { group: 'Navigate', label: 'About', run: go('about') },
     { group: 'Navigate', label: 'Contact', run: go('contact') },
-    { group: 'Settings', label: 'Toggle dark mode', run: toggleTheme },
     { group: 'Play', label: 'Play the portfolio game', hint: 'P', run: () => window.dispatchEvent(new Event('toggle-game')) },
     ...projects.map((p) => ({
       group: 'Projects',
