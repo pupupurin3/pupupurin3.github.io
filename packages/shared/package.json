@@ -1,0 +1,20 @@
+{
+  "name": "@portfolio/shared",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Request/response schemas and constants shared by the site and the API.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.0"
+  }
+}

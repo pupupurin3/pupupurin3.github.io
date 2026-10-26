@@ -1,0 +1,1456 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portfolio API",
+    "version": "1.0.0",
+    "description": "Backend for Noah Matsukuma's portfolio: project stats, guestbook, contact form and the platformer leaderboard. Errors use RFC 9457 problem details; write routes are rate limited per visitor and report the IETF RateLimit headers."
+  },
+  "tags": [
+    {
+      "name": "Projects",
+      "description": "The project catalogue with view and like counts"
+    },
+    {
+      "name": "Guestbook",
+      "description": "Moderated guestbook"
+    },
+    {
+      "name": "Contact",
+      "description": "Contact form"
+    },
+    {
+      "name": "Game",
+      "description": "Server-timed platformer runs and leaderboard"
+    },
+    {
+      "name": "Admin",
+      "description": "Moderation, behind a bearer token"
+    },
+    {
+      "name": "Meta"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "The ADMIN_TOKEN secret."
+      }
+    },
+    "schemas": {
+      "ProjectList": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectWithStats"
+            }
+          }
+        },
+        "required": [
+          "projects"
+        ]
+      },
+      "ProjectWithStats": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "Games",
+              "Simulations",
+              "Apps",
+              "3D"
+            ]
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-f]{6}$/i"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "blurb": {
+            "type": "string"
+          },
+          "repo": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ]
+            }
+          },
+          "model": {
+            "type": "string"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/ProjectStats"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "category",
+          "color",
+          "tags",
+          "blurb",
+          "stats"
+        ]
+      },
+      "ProjectStats": {
+        "type": "object",
+        "properties": {
+          "views": {
+            "type": "integer"
+          },
+          "likes": {
+            "type": "integer"
+          },
+          "liked": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "views",
+          "likes",
+          "liked"
+        ]
+      },
+      "Problem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status"
+        ]
+      },
+      "GuestbookPage": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GuestbookEntry"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "entries",
+          "nextCursor"
+        ]
+      },
+      "GuestbookEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "message",
+          "createdAt"
+        ]
+      },
+      "Accepted": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "received",
+              "pending"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "GuestbookEntryInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 280
+          },
+          "website": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Leave empty. Hidden from people; bots that fill it are ignored."
+          }
+        },
+        "required": [
+          "name",
+          "message"
+        ]
+      },
+      "ContactInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "website": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Leave empty. Hidden from people; bots that fill it are ignored."
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "message"
+        ]
+      },
+      "GameRunStart": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "runId",
+          "startedAt"
+        ]
+      },
+      "GameRunResult": {
+        "type": "object",
+        "properties": {
+          "timeMs": {
+            "type": "integer"
+          },
+          "rank": {
+            "type": "integer"
+          },
+          "personalBest": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "timeMs",
+          "rank",
+          "personalBest"
+        ]
+      },
+      "GameRunFinishInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "stars": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 8
+          }
+        },
+        "required": [
+          "name",
+          "stars"
+        ]
+      },
+      "Leaderboard": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeaderboardEntry"
+            }
+          }
+        },
+        "required": [
+          "entries"
+        ]
+      },
+      "LeaderboardEntry": {
+        "type": "object",
+        "properties": {
+          "rank": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "timeMs": {
+            "type": "integer"
+          },
+          "finishedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "rank",
+          "name",
+          "timeMs",
+          "finishedAt"
+        ]
+      },
+      "AdminGuestbookEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "reviewedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "message",
+          "status",
+          "createdAt",
+          "reviewedAt"
+        ]
+      },
+      "ContactMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "message",
+          "createdAt"
+        ]
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Meta"
+        ],
+        "summary": "Check that the API and its database are up",
+        "responses": {
+          "200": {
+            "description": "Healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ]
+                    },
+                    "database": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "error"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "database"
+                  ]
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The database is unreachable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ]
+                    },
+                    "database": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "error"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "database"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "List every project with its view and like counts",
+        "responses": {
+          "200": {
+            "description": "All projects, in display order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{slug}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get one project with its counts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "example": "hanafuda"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectWithStats"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{slug}/views": {
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Count a view",
+        "description": "Counts at most one view per visitor, project and UTC day.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "example": "hanafuda"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Recorded (or already counted today)"
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/projects/{slug}/like": {
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Like a project",
+        "description": "Idempotent: liking twice counts once.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "example": "hanafuda"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectStats"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Take back a like",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "example": "hanafuda"
+            },
+            "required": true,
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated counts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectStats"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/guestbook": {
+      "get": {
+        "tags": [
+          "Guestbook"
+        ],
+        "summary": "List approved guestbook entries, newest first",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GuestbookPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Guestbook"
+        ],
+        "summary": "Sign the guestbook",
+        "description": "New entries wait for moderation and appear once approved.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuestbookEntryInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Received, awaiting approval",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request body is too large.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contact": {
+      "post": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "Send Noah a message",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "The request body is too large.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/game/runs": {
+      "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Start a timed run of the platformer",
+        "description": "The server starts the clock here. Finish the run with the returned id.",
+        "responses": {
+          "201": {
+            "description": "Run started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameRunStart"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/game/runs/{runId}/finish": {
+      "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Finish a run and post it to the leaderboard",
+        "description": "The official time is measured by the server from start to finish, so a modified client cannot post a faster time than it really took. A run must collect every star, can be finished once, and expires after an hour.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "runId",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GameRunFinishInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Time recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameRunResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicts with the current state.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "No longer available.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Valid, but not acceptable.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit reached; see the Retry-After header.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/game/leaderboard": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Fastest players",
+        "description": "Each player's best time, fastest first.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The leaderboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Leaderboard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/guestbook": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "List guestbook entries by status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "approved",
+                "rejected"
+              ],
+              "default": "pending"
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "entries": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdminGuestbookEntry"
+                      }
+                    }
+                  },
+                  "required": [
+                    "entries"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong admin token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/guestbook/{id}": {
+      "patch": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Approve or reject an entry",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "approved",
+                      "rejected"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminGuestbookEntry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong admin token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Delete an entry",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "401": {
+            "description": "Missing or wrong admin token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/messages": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Read contact messages, newest first",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "messages": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ContactMessage"
+                      }
+                    },
+                    "nextCursor": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "messages",
+                    "nextCursor"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong admin token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/game/runs/{runId}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Remove a run from the leaderboard",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "runId",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "400": {
+            "description": "The request did not pass validation; `errors` lists the messages per field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or wrong admin token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}

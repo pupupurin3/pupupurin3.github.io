@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "portfolio-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "vars": {
+    // Comma-separated list of origins allowed to call the API from a browser.
+    "ALLOWED_ORIGINS": "https://pupupurin3.github.io,http://localhost:5173,http://localhost:4173"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portfolio",
+      // Replace with the id printed by `wrangler d1 create portfolio`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // Nightly clean-up of expired rate-limit windows and abandoned game runs.
+  "triggers": { "crons": ["17 3 * * *"] }
+  // Secrets (set with `wrangler secret put <NAME>`):
+  //   ADMIN_TOKEN        bearer token for the /v1/admin routes
+  //   HASH_SALT          salt for hashing visitor IPs (no raw IPs are stored)
+  //   NOTIFY_WEBHOOK_URL optional Discord/Slack webhook pinged on new messages
+}
