@@ -32,6 +32,7 @@ const trimmed = (max: number, label: string) =>
     .min(1, `${label} is required`)
     .max(max, `${label} must be at most ${max} characters`)
     // Control characters (other than newlines and tabs) have no place in a message.
+    // eslint-disable-next-line no-control-regex -- matching control characters is the point
     .refine((s) => !/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(s), `${label} contains invalid characters`)
 
 export const NameSchema = trimmed(LIMITS.name, 'Name')

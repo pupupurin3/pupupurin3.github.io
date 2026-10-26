@@ -28,7 +28,7 @@ export async function call(path: string, { method = 'GET', body, ip = '203.0.113
     }),
   )
   const text = await res.text()
-  let json: any = null
+  let json: any
   try {
     json = text ? JSON.parse(text) : null
   } catch {

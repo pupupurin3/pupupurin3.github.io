@@ -1,54 +1,62 @@
 # pupupurin3.github.io
 
-Noah Matsukuma's portfolio: a clean, minimal React site with a Lab section
-that shows off harder front-end work (a scrollable project shelf, a model viewer,
-scroll-linked animation, spring physics), a ⌘K command palette and an
-optional platformer you can play on top of the page.
+Noah Matsukuma's portfolio: a React site with a Lab of front-end experiments,
+a ⌘K command palette and a platformer you can play on top of the page, backed
+by a TypeScript API on Cloudflare Workers with a D1 (SQLite) database.
+
+```
+apps/web         The site: Vite + React 19 + TypeScript, Three.js (r3f), Framer Motion
+apps/api         The API: Hono on Cloudflare Workers, D1, zod, OpenAPI 3.1
+packages/shared  Project catalogue and request/response schemas used by both
+legacy/          The previous Bootstrap site, kept for reference (not built)
+```
 
 ## Run locally
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm run build    # production build in dist/
+npm run dev                  # site on http://localhost:5173
+
+# With the API (guestbook, contact form, likes, leaderboard):
+cp apps/api/.dev.vars.example apps/api/.dev.vars
+npm run db:migrate:local -w @portfolio/api
+npm run dev:api              # API on http://localhost:8787, docs at /docs
+cp apps/web/.env.example apps/web/.env.local   # points the site at it
 ```
 
-## Editing content
+`npm run check` runs lint, type checks and every test suite.
 
-All text, projects and gallery entries live in `src/data/content.js`.
-Blurbs marked `// TODO` were written from the repo name only; replace them
-with a real description.
+## The site (`apps/web`)
 
-- **Project screenshot:** put the image in `public/img/` and set `image: '/img/name.jpg'`.
-- **3D model on a project or in the gallery:** export a `.glb` (in Blender:
-  File > Export > glTF 2.0, format "glb") into `public/models/` and set
-  `model: '/models/name.glb'`. Models are centred and scaled automatically.
+All text lives in `src/content` (profile, about, gallery) and the projects in
+`packages/shared/src/projects.ts`. Blurbs marked `// TODO` were written from the
+repo name only; replace them with a real description.
 
-## Structure
+- **Project screenshot:** put the image in `apps/web/public/img/` and set `image: 'img/name.jpg'`.
+- **3D model:** export a `.glb` into `apps/web/public/models/` and set `model: 'models/name.glb'`.
 
-| File | What it does |
+| Folder | What's in it |
 | --- | --- |
-| `src/components/LoadingScreen.jsx` | Counter + hairline progress intro with a clip-path exit |
-| `src/components/Hero.jsx` | Masked word reveal, 3D tilt card with the diorama render |
-| `src/components/Work.jsx` | Filterable project grid; cards morph into a detail dialog (shared layout) |
-| `src/components/Lab.jsx` | Tabbed experiments: project shelf, model viewer, scroll-linked text, spring physics |
-| `src/components/ProjectShelf.jsx` | One scrollable row of project cards on a shelf: drag with momentum, arrows, hover lift, card grows into its details |
-| `src/components/AsciiDonut.jsx` | The header's spinning ASCII donut (donut.c on a canvas), filling the hero and running off its edges; each character is a spring that the cursor pushes away and a click scatters |
-| `src/theme.js` | Light/dark theme: light by default, the nav switch (or ⌘K "Toggle dark mode") flips it and the choice is remembered |
-| `src/components/PlayLayer.jsx` | Optional platformer over the real page (P or the Play button): Purin jumps on headings and cards, collects 8 stars and opens projects from their cards |
-| `src/components/CommandPalette.jsx` | ⌘K / Ctrl+K fuzzy search over sections, projects and links (the phone menu too) |
-| `src/components/Sections.jsx` | Nav, About (bio, skills, experience, education), contact, toast |
-| `src/components/models.jsx` | Procedural gallery models (Purin, Mars terrain, maze) and the `.glb` loader |
+| `components/hero` | The Sunfaded poster: letters fading out of a blur, drawn lines, sun rays |
+| `components/work` | Filterable project grid; cards morph into a detail dialog with likes and views |
+| `components/lab` | Tabbed experiments: the project shelf, model viewer, scroll-linked text, spring physics |
+| `components/three` | Model viewer and procedural models (voxel Purin, Mars terrain, maze), loaded lazily |
+| `components/game` | The platformer: pure physics (`physics.ts`), level scanning, rendering and the leaderboard |
+| `components/contact` | Contact form and guestbook (only shown when the API is configured) |
+| `components/palette` | ⌘K / Ctrl+K fuzzy command palette |
+| `hooks`, `lib` | Shared hooks (modal, drag-scroll, toast, forms), the typed API client and site events |
 
-The header image is `public/img/hero-model.png`, a cut-out of the diorama render.
+The API features are optional: when the site is built without `VITE_API_URL`,
+the guestbook, contact form, likes and leaderboard don't render and everything
+else works as before.
 
-Animations use Framer Motion and respect the visitor's reduced-motion setting.
+## The API (`apps/api`)
+
+See [apps/api/README.md](apps/api/README.md) for the design, endpoints and deployment.
 
 ## Deploying
 
-`.github/workflows/deploy.yml` builds and publishes to GitHub Pages on every
-push to `master`. In the repo's **Settings > Pages**, set **Source** to
-**GitHub Actions** once.
-
-The previous Bootstrap site is kept in `legacy/` for reference; it is not part
-of the build and can be deleted.
+- **Site:** `.github/workflows/deploy.yml` publishes to GitHub Pages on every push
+  to `master`. Set **Settings > Pages > Source** to **GitHub Actions** once.
+- **API:** `.github/workflows/deploy-api.yml` migrates the database and deploys the
+  Worker when the API changes. Setup steps are in the API README.

@@ -1,0 +1,40 @@
+/* ---------- Work ---------- */
+.segmented, .filters { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 4px; margin-bottom: 24px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); }
+.segmented button, .filters button { position: relative; padding: 6px 14px; font-size: 0.85rem; color: var(--muted); border-radius: 999px; transition: color 0.2s; }
+.segmented button.on, .filters button.on { color: var(--text); }
+.segmented .label, .filter-label { position: relative; }
+.seg-pill, .filter-pill { position: absolute; inset: 0; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 999px; }
+.card-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card {
+  position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; text-align: left;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  transition: border-color 0.25s;
+}
+.card:hover { border-color: var(--border-strong); }
+.card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+.card-media-inner { width: 100%; height: 100%; }
+.card-media img, .detail-media img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.cover-gen {
+  width: 100%; height: 100%; display: grid; place-items: center;
+  background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--c) 55%, transparent), transparent 60%), linear-gradient(160deg, color-mix(in srgb, var(--c) 30%, #111) , #111214);
+}
+.cover-gen span { font-size: 3rem; font-weight: 600; letter-spacing: -0.04em; color: rgba(255, 255, 255, 0.85); }
+.pill { position: absolute; top: 12px; right: 12px; padding: 2px 9px; font-size: 0.72rem; font-weight: 600; color: var(--accent-ink); background: var(--accent); border-radius: 999px; }
+.card-body { padding: 18px 20px 22px; padding-right: 44px; }
+.card-body h3 { font-size: 1.1rem; }
+.card-meta { margin-top: 4px; font-size: 0.8rem; color: var(--faint); font-family: var(--mono); }
+.card-blurb { margin-top: 10px; font-size: 0.9rem; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-arrow { position: absolute; right: 18px; bottom: 20px; color: var(--muted); opacity: 0.5; }
+.more { display: flex; justify-content: center; margin-top: 28px; }
+
+.backdrop { position: fixed; inset: 0; z-index: 80; background: var(--scrim); backdrop-filter: blur(6px); }
+.detail-wrap { position: fixed; inset: 0; z-index: 81; display: grid; place-items: center; padding: 20px; }
+.detail { position: relative; width: min(760px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 20px; box-shadow: 0 40px 80px var(--shadow); }
+.detail-media { aspect-ratio: 16 / 9; background: var(--surface-2); overflow: hidden; }
+.detail-media .model-viewer { width: 100%; height: 100%; }
+.detail-body { padding: 24px 28px 28px; }
+.detail-body h3 { font-size: 1.8rem; letter-spacing: -0.03em; }
+.detail-body p { color: var(--muted); }
+.detail-body .card-meta { margin: 6px 0 14px; }
+.detail-body .tags { margin-top: 16px; }
+.detail-close { position: absolute; top: 14px; right: 14px; }

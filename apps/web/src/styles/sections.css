@@ -1,0 +1,13 @@
+/* ---------- Sections ---------- */
+.section { max-width: var(--max); margin: 0 auto; padding: 100px 20px 20px; }
+.section-header { display: grid; grid-template-columns: 80px 1fr; gap: 16px; margin-bottom: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+.section-index { font-family: var(--mono); font-size: 0.85rem; color: var(--faint); padding-top: 10px; }
+.section-header h2 { font-size: clamp(2rem, 4.5vw, 3rem); letter-spacing: -0.035em; }
+.section-lede { margin-top: 12px; color: var(--muted); max-width: 60ch; }
+@media (max-width: 640px) { .section-header { grid-template-columns: 1fr; gap: 4px; } }
+
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags span { font-size: 0.75rem; padding: 3px 10px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.icon-btn { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--glass); border: 1px solid var(--border-strong); color: var(--text); backdrop-filter: blur(8px); }
+.icon-btn:hover { background: var(--surface-2); }
