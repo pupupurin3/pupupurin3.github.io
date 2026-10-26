@@ -1,0 +1,33 @@
+name: Deploy API to Cloudflare
+
+on:
+  push:
+    branches: [master]
+    paths: ['apps/api/**', 'packages/shared/**', 'package-lock.json']
+  workflow_dispatch:
+
+concurrency:
+  group: api-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Skipped until the Cloudflare secrets are added to the repository.
+    if: ${{ vars.API_URL != '' }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test -w @portfolio/api
+      # Migrations first: a new Worker may rely on the new schema.
+      - run: npm run db:migrate:remote -w @portfolio/api
+      - run: npm run deploy -w @portfolio/api
+      - name: Smoke test
+        run: curl --fail --silent --show-error "${{ vars.API_URL }}/health"

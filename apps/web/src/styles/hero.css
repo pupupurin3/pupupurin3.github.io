@@ -1,0 +1,83 @@
+/* ---------- Hero ---------- */
+/* A washed-out photo poster: huge thin name, kanji under a drawn rule, slow
+   sun rays. The photo is pre-graded (pale blue duotone), so it reads the
+   same in light and dark mode. */
+.hero {
+  --edge: 2.5vw;
+  position: relative; overflow: hidden; min-height: max(100svh, 560px); color: #fff;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 44px var(--edge) 48px; isolation: isolate; background: #c9d4dc;
+}
+.hero-photo { position: absolute; inset: 0; z-index: -2; }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; display: block; }
+/* Darkens only the bottom so the intro and buttons stay readable. */
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(0deg, rgba(28, 40, 54, 0.55), rgba(28, 40, 54, 0.12) 34%, transparent 52%);
+}
+
+.sunrays { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.sunrays > span { position: absolute; left: 92%; top: -12%; translate: -50% -50%; border-radius: 50%; }
+.sunrays-glow {
+  width: 90vmax; height: 90vmax;
+  background: radial-gradient(circle, rgba(255, 251, 240, 0.85) 0%, rgba(255, 248, 232, 0.3) 16%, transparent 46%);
+  animation: sun-breathe 9s ease-in-out infinite alternate;
+}
+.sunrays-beams {
+  width: 260vmax; height: 260vmax;
+  background: conic-gradient(from 150deg,
+    transparent 0deg, rgba(255, 250, 238, 0.5) 3deg, transparent 6deg,
+    transparent 11deg, rgba(255, 250, 238, 0.32) 13deg, transparent 17deg,
+    transparent 24deg, rgba(255, 250, 238, 0.55) 27deg, transparent 32deg,
+    transparent 38deg, rgba(255, 250, 238, 0.25) 39.5deg, transparent 42deg,
+    transparent 49deg, rgba(255, 250, 238, 0.42) 52deg, transparent 57deg,
+    transparent 64deg, rgba(255, 250, 238, 0.3) 66deg, transparent 70deg,
+    transparent 360deg);
+  -webkit-mask-image: radial-gradient(circle, #000 3%, rgba(0, 0, 0, 0.55) 20%, transparent 46%);
+  mask-image: radial-gradient(circle, #000 3%, rgba(0, 0, 0, 0.55) 20%, transparent 46%);
+  animation: sun-sway 16s ease-in-out infinite alternate;
+}
+.sunrays-beams-2 { opacity: 0.7; rotate: 12deg; animation: sun-sway-2 23s ease-in-out infinite alternate; }
+@keyframes sun-sway { from { rotate: -5deg; opacity: 0.75; } to { rotate: 6deg; opacity: 1; } }
+@keyframes sun-sway-2 { from { rotate: 16deg; opacity: 0.4; } to { rotate: 4deg; opacity: 0.85; } }
+@keyframes sun-breathe { from { opacity: 0.8; scale: 0.94; } to { opacity: 1; scale: 1.06; } }
+
+.hero-line { position: absolute; display: block; background: rgba(255, 255, 255, 0.75); pointer-events: none; }
+.hero-line-top { left: var(--edge); right: var(--edge); top: 30px; height: 1px; opacity: 0.6; }
+.hero-line-left { left: calc(var(--edge) - 12px); top: 30px; bottom: 32px; width: 1px; opacity: 0.45; }
+
+.hero-head { position: relative; padding-top: 8px; }
+.hero-tag { margin: 0 0 1.2vw 0.2em; font-size: 0.8rem; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.85); }
+.hero-title {
+  margin: 0; font-family: 'Josefin Sans', var(--sans); font-weight: 400;
+  font-size: 9.6vw; line-height: 0.92; letter-spacing: -0.045em; white-space: nowrap;
+  display: flex; gap: 0.5em; text-shadow: 0 0 40px rgba(110, 140, 170, 0.25);
+}
+.hero-word { display: inline-block; }
+.hero-letter { display: inline-block; will-change: transform, opacity, filter; }
+.hero-sub { position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 1.6vw; margin-top: 2.2vw; }
+.hero-line-kanji { position: relative; flex: 1; height: 2px; max-width: 52%; background: rgba(255, 255, 255, 0.85); }
+.hero-kanji {
+  margin: 0; font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', 'IPAGothic', sans-serif;
+  font-weight: 400; font-size: clamp(2rem, 6.4vw, 6.2rem); line-height: 1; letter-spacing: -0.045em;
+  display: flex; gap: 0.25em; white-space: nowrap;
+}
+
+.hero-foot { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.hero-intro { margin: 0; max-width: 46ch; color: rgba(255, 255, 255, 0.92); font-size: 0.95rem; text-shadow: 0 1px 12px rgba(20, 30, 45, 0.35); }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero .btn:not(.primary) { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.55); color: #fff; backdrop-filter: blur(8px); }
+.hero .btn:not(.primary):hover { background: rgba(255, 255, 255, 0.28); }
+.hero .btn.primary { background: #fff; color: #142030; border-color: #fff; }
+
+@media (max-width: 640px) {
+  .hero { --edge: 5vw; padding-top: 40px; }
+  .hero-line-top { top: 26px; }
+  .hero-line-left { top: 26px; }
+  .hero-title { flex-direction: column; gap: 0; font-size: 14.5vw; }
+  .hero-sub { margin-top: 4vw; }
+  .hero-kanji { font-size: 10vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunrays > span { animation: none; }
+}

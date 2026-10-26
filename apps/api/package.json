@@ -1,0 +1,29 @@
+{
+  "name": "@portfolio/api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply portfolio --local",
+    "db:migrate:remote": "wrangler d1 migrations apply portfolio --remote",
+    "openapi": "tsx scripts/export-openapi.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "cf-typegen": "wrangler types --strict-vars=false"
+  },
+  "dependencies": {
+    "@hono/zod-openapi": "^1.1.0",
+    "@portfolio/shared": "*",
+    "hono": "^4.10.0",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.4.7",
+    "@types/node": "^22.20.5",
+    "tsx": "^4.20.0",
+    "vitest": "^4.1.0",
+    "wrangler": "4.152.0"
+  }
+}

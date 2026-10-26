@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  check:
+    name: Lint, types, tests and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      # API tests run inside the Workers runtime against a local D1 database.
+      - run: npm test
+      - name: OpenAPI spec is up to date
+        run: npm run openapi -w @portfolio/api -- --check
+      - name: Build the site
+        run: npm run build

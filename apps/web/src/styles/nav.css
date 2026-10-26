@@ -1,0 +1,29 @@
+/* ---------- Nav ---------- */
+.scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; background: var(--accent); transform-origin: 0 50%; }
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+  padding: 14px max(20px, calc((100vw - var(--max)) / 2));
+  border-bottom: 1px solid transparent; transition: background 0.3s, border-color 0.3s;
+}
+.nav.nav-hidden { pointer-events: none; }
+.nav.scrolled { background: var(--glass); backdrop-filter: saturate(160%) blur(14px); border-color: var(--border); }
+.brand { font-weight: 600; letter-spacing: -0.01em; }
+.nav ul { display: flex; gap: 2px; list-style: none; margin: 0; padding: 4px; border: 1px solid var(--border); border-radius: 999px; background: var(--glass); }
+.nav ul a { position: relative; display: block; padding: 6px 14px; font-size: 0.875rem; color: var(--muted); border-radius: 999px; transition: color 0.2s; }
+.nav ul a:hover, .nav ul a.active { color: var(--text); }
+.nav ul a .label { position: relative; }
+.nav-pill { position: absolute; inset: 0; background: var(--surface-2); border: 1px solid var(--border-strong); border-radius: 999px; }
+.nav-end { justify-self: end; display: flex; align-items: center; gap: 10px; }
+.kbd-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 6px 5px 12px; font-size: 0.85rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; transition: border-color 0.2s, color 0.2s; }
+.kbd-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.kbd-btn-text { margin-right: 6px; }
+.kbd-btn-menu { display: none; }
+@media (max-width: 720px) {
+  .nav { grid-template-columns: 1fr auto; }
+  .nav ul { display: none; }
+  /* On phones the palette doubles as the menu. */
+  .kbd-btn { padding: 6px 14px; color: var(--text); }
+  .kbd-btn-text, .kbd-btn kbd, .hero-stats div:last-child { display: none; }
+  .kbd-btn-menu { display: inline; }
+}

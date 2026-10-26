@@ -1,0 +1,53 @@
+/* ---------- Command palette & toast ---------- */
+.palette-backdrop { z-index: 90; }
+.palette {
+  position: fixed; z-index: 91; top: 14vh; left: 50%; translate: -50% 0; width: min(560px, calc(100vw - 32px));
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px; box-shadow: 0 40px 80px var(--shadow); overflow: hidden;
+}
+.palette input { width: 100%; padding: 18px 20px; font: inherit; font-size: 1rem; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--border); outline: none; }
+.palette input::placeholder { color: var(--faint); }
+.palette-list { list-style: none; margin: 0; padding: 6px; max-height: 340px; overflow: auto; }
+.palette-group { padding: 10px 12px 4px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); }
+.palette-list button { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; text-align: left; border-radius: var(--radius-sm); font-size: 0.92rem; }
+.palette-list button span, .palette-list button small { position: relative; }
+.palette-list .palette-label { flex: 1; }
+.palette-list small { color: var(--faint); font-size: 0.8rem; }
+.palette-hl { position: absolute; inset: 0; background: var(--surface-2); border-radius: var(--radius-sm); }
+.palette-empty { padding: 20px 12px; color: var(--faint); font-size: 0.9rem; }
+.palette-foot { display: flex; gap: 16px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--faint); }
+.palette-foot span { display: inline-flex; align-items: center; gap: 4px; }
+.toast { position: fixed; z-index: 95; left: 50%; bottom: 28px; padding: 10px 18px; font-size: 0.9rem; background: var(--text); color: var(--bg); border-radius: 999px; box-shadow: 0 10px 30px var(--shadow); }
+
+/* Play mode: the canvas sits above the page but below the nav and dialogs,
+   and never takes pointer events so the site stays usable. */
+.play-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 45; pointer-events: none; }
+.play-dock {
+  position: fixed; z-index: 55; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 10px;
+  padding: 6px; background: var(--glass); border: 1px solid var(--border); border-radius: 999px;
+  backdrop-filter: blur(10px); font-size: 0.82rem; color: var(--muted);
+}
+.play-hud { padding-left: 10px; font-family: var(--mono); color: var(--text); white-space: pre; }
+.play-keys { display: flex; align-items: center; gap: 4px; }
+.play-btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; cursor: pointer;
+}
+.play-btn:hover { border-color: var(--hover-border); }
+.play-btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); font-weight: 600; }
+.play-btn.primary kbd { color: var(--bg); border-color: rgba(10, 10, 11, 0.25); background: transparent; }
+.play-icon { font-size: 0.7em; }
+.play-pad {
+  position: fixed; z-index: 55; left: 16px; right: 16px; bottom: 76px; display: flex; justify-content: space-between;
+  pointer-events: none; user-select: none; -webkit-user-select: none; touch-action: none;
+}
+.play-pad div { display: flex; gap: 12px; }
+.play-pad button {
+  pointer-events: auto; width: 56px; height: 56px; border-radius: 50%; font-size: 1.2rem; color: var(--text);
+  background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(6px); touch-action: none;
+}
+.play-pad button:active { background: rgba(138, 180, 255, 0.25); }
+.play-pad .jump { width: 68px; height: 68px; }
+@media (max-width: 760px) {
+  .play-keys { display: none; }
+  .play-dock { right: 12px; bottom: 12px; }
+}

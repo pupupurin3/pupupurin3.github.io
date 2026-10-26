@@ -1,0 +1,10 @@
+/* ---------- Loader ---------- */
+.loader {
+  position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 28px max(20px, 4vw); background: var(--bg);
+}
+.loader-top { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--muted); }
+.loader-top span:first-child { color: var(--text); font-weight: 500; }
+.loader-count { display: block; font-size: clamp(5rem, 18vw, 13rem); font-weight: 500; letter-spacing: -0.05em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+.loader-line { height: 1px; margin-top: 18px; background: var(--border); overflow: hidden; }
+.loader-line div { height: 100%; background: var(--text); transform-origin: 0 50%; }
