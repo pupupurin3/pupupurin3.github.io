@@ -1,4 +1,3 @@
-import { asset } from '../lib/asset'
 import { profile } from './profile'
 
 export interface GalleryModel {
@@ -11,7 +10,6 @@ export interface GalleryModel {
 // Models shown in the Lab's model viewer. Export a .glb into public/models
 // and add { name, model: asset('models/x.glb'), note }.
 export const gallery: GalleryModel[] = [
-  { name: 'Vending Machine', model: asset('models/vending-machine.glb'), note: 'Modelled in Maya' },
   { name: 'Street Corner', model: profile.heroModel, note: 'Diorama modelled in Maya' },
   { name: 'Purin', model: 'purin', note: 'Voxel pudding mascot' },
   { name: 'Mars Terrain', model: 'mars', note: 'Procedural low-poly terrain' },
