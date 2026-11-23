@@ -27,3 +27,32 @@
   .kbd-btn-text, .kbd-btn kbd, .hero-stats div:last-child { display: none; }
   .kbd-btn-menu { display: inline; }
 }
+
+/* ---------- Side rail (wide screens) ---------- */
+.rail { display: none; }
+@media (min-width: 901px) {
+  :root { --rail: 64px; }
+  body { padding-left: var(--rail); }
+  .nav { display: none; }
+  .rail {
+    position: fixed; z-index: 55; top: 0; bottom: 0; left: 0; width: var(--rail); display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between; padding: 22px 0 18px; background: var(--bg); border-right: 1px solid var(--text);
+  }
+  .rail-name { display: flex; gap: 10px; writing-mode: vertical-rl; align-items: center; }
+  .rail-name span { font-family: var(--display); font-size: 1.2rem; letter-spacing: -0.02em; text-transform: uppercase; }
+  .rail-name small { font-size: 0.7rem; color: var(--muted); }
+  .rail-name:hover span { color: var(--accent); }
+  .rail-menu { display: grid; gap: 5px; padding: 10px 8px; border-radius: 6px; }
+  .rail-menu span { width: 18px; height: 1.5px; background: var(--text); transition: width 0.25s var(--ease), background 0.2s; }
+  .rail-menu:hover span { background: var(--accent); }
+  .rail-menu:hover span:nth-child(2) { width: 12px; }
+  .rail-foot { display: grid; justify-items: center; gap: 10px; }
+  .rail-section { position: relative; height: 80px; width: 20px; overflow: hidden; }
+  .rail-section span { position: absolute; inset: 0; writing-mode: vertical-rl; display: flex; align-items: flex-end; justify-content: flex-start; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; }
+  .rail-count { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+  .rail-arrows { display: flex; }
+  .rail-arrows button { width: 20px; height: 22px; color: var(--muted); font-size: 1rem; }
+  .rail-arrows button:hover:not(:disabled) { color: var(--accent); }
+  .rail-arrows button:disabled { opacity: 0.3; cursor: default; }
+  .scroll-progress { left: var(--rail); }
+}

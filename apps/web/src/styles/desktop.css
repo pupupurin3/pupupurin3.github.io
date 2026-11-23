@@ -1,0 +1,102 @@
+/* ---------- Lab desktop ---------- */
+.desktop {
+  position: relative; display: flex; flex-direction: column; height: clamp(560px, 82vh, 760px);
+  border: 1px solid var(--text); border-radius: 14px; overflow: hidden; background: var(--pale);
+  box-shadow: 8px 8px 0 var(--text);
+}
+.desk-area {
+  position: relative; flex: 1; overflow: hidden;
+  background-image: radial-gradient(color-mix(in srgb, var(--navy) 18%, transparent) 1px, transparent 1.2px);
+  background-size: 18px 18px;
+}
+.desk-icons { list-style: none; margin: 0; padding: 14px 8px; display: grid; grid-auto-flow: column; grid-template-rows: repeat(auto-fill, 86px); align-content: start; gap: 2px 4px; height: 100%; width: max-content; }
+.desk-icon { display: grid; justify-items: center; gap: 6px; width: 96px; padding: 8px 4px; border-radius: 8px; transition: background 0.2s; }
+.desk-icon:hover, .desk-icon:focus-visible { background: color-mix(in srgb, var(--navy) 9%, transparent); }
+.desk-icon-tile {
+  display: grid; place-items: center; width: 44px; height: 44px; font-size: 1.25rem; font-family: var(--mono);
+  background: var(--surface); border: 1px solid var(--text); border-radius: 10px; box-shadow: 2px 2px 0 var(--text);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.desk-icon:hover .desk-icon-tile { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--accent); }
+.desk-icon-name { font-family: var(--mono); font-size: 0.7rem; color: var(--text); text-align: center; overflow-wrap: anywhere; line-height: 1.25; }
+
+.win {
+  position: absolute; display: flex; flex-direction: column; overflow: hidden; background: var(--surface);
+  border: 1px solid var(--text); border-radius: 10px; box-shadow: 4px 4px 0 color-mix(in srgb, var(--text) 18%, transparent);
+  transform-origin: 50% 80%;
+}
+.win.focused { box-shadow: 6px 6px 0 var(--text); }
+.win.max { border-radius: 0; border-width: 0; box-shadow: none; }
+.win-bar {
+  display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 6px 0 10px; flex: none; cursor: grab; touch-action: none; user-select: none;
+  background: var(--surface-2); border-bottom: 1px solid var(--text);
+}
+.win.focused .win-bar { background: var(--navy); color: #fff; }
+.win.max .win-bar { cursor: default; }
+.win-bar:active { cursor: grabbing; }
+.win-glyph { font-family: var(--mono); font-size: 0.8rem; width: 18px; text-align: center; }
+.win-title { font-family: var(--mono); font-size: 0.78rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.win-maths { padding: 2px 9px; font-size: 0.72rem; font-family: var(--mono); border: 1px solid currentColor; border-radius: 999px; opacity: 0.85; }
+.win-maths:hover { opacity: 1; }
+.win-maths.on { background: var(--accent); border-color: var(--accent); color: #fff; opacity: 1; }
+.win-buttons { display: flex; gap: 2px; }
+.win-buttons button { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; font-size: 0.95rem; line-height: 1; }
+.win-buttons button:hover { background: color-mix(in srgb, currentColor 16%, transparent); }
+.win-buttons button:last-child:hover { background: var(--accent); color: #fff; }
+.win-content { position: relative; flex: 1; min-height: 0; display: flex; }
+.win-app { flex: 1; min-width: 0; overflow: auto; }
+.win-math { flex: none; overflow: hidden; border-left: 1px solid var(--text); background: #fbfaf7; }
+.win-math-inner { width: min(300px, 100%); min-width: 220px; height: 100%; overflow: auto; padding: 14px 16px; font-size: 0.85rem; line-height: 1.55; color: var(--muted); }
+.win-math-inner p + p, .win-math-inner .eq + p, .win-math-inner ol + p { margin-top: 10px; }
+.win-math-inner b, .win-math-inner em { color: var(--text); }
+.win-math-inner ol { margin: 10px 0 0; padding-left: 18px; }
+.win-math-inner li + li { margin-top: 4px; }
+.eq {
+  margin: 10px 0; padding: 10px 12px; font-family: 'Times New Roman', 'STIX Two Math', serif; font-size: 1.05rem; color: var(--text);
+  background: var(--surface); border-left: 3px solid var(--accent); overflow-x: auto; white-space: nowrap;
+}
+.eq-inline { font-family: 'Times New Roman', serif; color: var(--text); white-space: nowrap; }
+.win-resize { position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize; touch-action: none;
+  background: linear-gradient(135deg, transparent 50%, var(--text) 50%, var(--text) 58%, transparent 58%, transparent 70%, var(--text) 70%, var(--text) 78%, transparent 78%); }
+
+/* Apps share one layout: a canvas over a row of controls. */
+.app { display: flex; flex-direction: column; height: 100%; }
+.app-canvas { flex: 1; min-height: 0; width: 100%; display: block; touch-action: none; }
+.app-canvas.draw { cursor: crosshair; }
+.app-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; border-top: 1px solid var(--border); font-size: 0.78rem; font-family: var(--mono); color: var(--muted); }
+.app-controls label { display: inline-flex; align-items: center; gap: 8px; }
+.app-controls output { min-width: 3ch; color: var(--text); }
+.app-controls input[type='range'] { width: 110px; accent-color: var(--accent); }
+.app-btn { padding: 3px 10px; border: 1px solid var(--text); border-radius: 6px; color: var(--text); background: var(--surface); }
+.app-btn:hover { background: var(--surface-2); }
+.app-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.app-hint { color: var(--faint); display: inline-flex; align-items: center; gap: 5px; }
+.app-hint i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-left: 6px; }
+.key-stack { background: #ffd9cc; } .key-open { background: #9cc8e4; } .key-closed { background: #dcebf5; }
+.app-readme { padding: 16px 18px; font-size: 0.9rem; color: var(--muted); }
+.app-readme p + p, .app-readme ul + p { margin-top: 12px; }
+.app-readme b { color: var(--text); font-family: var(--mono); font-weight: 500; font-size: 0.85em; }
+.app-readme ul { margin: 12px 0 0; padding-left: 18px; }
+.app-readme li + li { margin-top: 4px; }
+/* Older demos inside windows. */
+.win-app > .gallery { height: 100%; border: 0; border-radius: 0; }
+.win-app .gallery-viewer { height: 100%; min-height: 260px; }
+.win-app > .physics, .win-app > .scroll-demo, .win-app > .shelf { padding: 14px; }
+.win-app > .scroll-demo { height: 100%; border: 0; border-radius: 0; }
+
+.taskbar { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 8px; flex: none; border-top: 1px solid var(--text); background: var(--surface); }
+.task-start { padding: 3px 12px; font-family: var(--display); font-size: 0.95rem; color: #fff; background: var(--accent); border-radius: 6px; }
+.task-list { flex: 1; min-width: 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.task-chip { flex: none; padding: 4px 10px; font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--border-strong); border-radius: 6px; color: var(--muted); }
+.task-chip.on { color: var(--text); border-color: var(--text); background: var(--surface-2); }
+.task-chip.min { border-style: dashed; }
+.task-clock { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 640px) {
+  .desktop { height: 78svh; box-shadow: 4px 4px 0 var(--text); }
+  .desk-icons { grid-auto-flow: row; grid-template-rows: none; grid-template-columns: repeat(auto-fill, 80px); width: 100%; height: auto; justify-content: center; }
+  .desk-icon { width: 80px; }
+  .win-math { position: absolute; inset: 0 0 0 auto; z-index: 2; }
+  .win-math-inner { min-width: 0; }
+}
+.desk-tip { position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); }

@@ -1,9 +1,13 @@
 /* ---------- Sections ---------- */
-.section { max-width: var(--max); margin: 0 auto; padding: 100px 20px 20px; }
-.section-header { display: grid; grid-template-columns: 80px 1fr; gap: 16px; margin-bottom: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
-.section-index { font-family: var(--mono); font-size: 0.85rem; color: var(--faint); padding-top: 10px; }
-.section-header h2 { font-size: clamp(2rem, 4.5vw, 3rem); letter-spacing: -0.035em; }
-.section-lede { margin-top: 12px; color: var(--muted); max-width: 60ch; }
+.section { max-width: var(--max); margin: 0 auto; padding: 120px clamp(20px, 3vw, 40px) 20px; }
+.section-header { position: relative; display: grid; grid-template-columns: 90px 1fr; gap: 16px; margin-bottom: 44px; }
+.section-index { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); padding-top: 14px; }
+.section-header h2 {
+  font-family: var(--display); font-weight: 400; font-size: clamp(2.8rem, 7vw, 5.4rem); letter-spacing: -0.05em; line-height: 0.95;
+  padding-bottom: 10px; background-image: radial-gradient(circle, var(--text) 1.1px, transparent 1.5px); background-size: 8px 4px; background-repeat: repeat-x; background-position: 0 100%;
+  display: inline-block;
+}
+.section-lede { margin-top: 16px; color: var(--muted); max-width: 62ch; }
 @media (max-width: 640px) { .section-header { grid-template-columns: 1fr; gap: 4px; } }
 
 .tags { display: flex; flex-wrap: wrap; gap: 6px; }

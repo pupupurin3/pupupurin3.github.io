@@ -7,24 +7,25 @@
 .card-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .card {
   position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; text-align: left;
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
-  transition: border-color 0.25s;
+  background: var(--surface); border: 1px solid var(--text); border-radius: 4px; overflow: hidden;
+  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.card:hover { border-color: var(--border-strong); }
-.card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+.card:hover { box-shadow: 6px 6px 0 var(--accent); transform: translate(-2px, -2px); }
+/* Media is cut on a slant, like the hero panel. */
+.card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-2); clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%); }
 .card-media-inner { width: 100%; height: 100%; }
 .card-media img, .detail-media img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 .cover-gen {
   width: 100%; height: 100%; display: grid; place-items: center;
   background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--c) 55%, transparent), transparent 60%), linear-gradient(160deg, color-mix(in srgb, var(--c) 30%, #111) , #111214);
 }
-.cover-gen span { font-size: 3rem; font-weight: 600; letter-spacing: -0.04em; color: rgba(255, 255, 255, 0.85); }
-.pill { position: absolute; top: 12px; right: 12px; padding: 2px 9px; font-size: 0.72rem; font-weight: 600; color: var(--accent-ink); background: var(--accent); border-radius: 999px; }
-.card-body { padding: 18px 20px 22px; padding-right: 44px; }
-.card-body h3 { font-size: 1.1rem; }
-.card-meta { margin-top: 4px; font-size: 0.8rem; color: var(--faint); font-family: var(--mono); }
+.cover-gen span { font-family: var(--display); font-size: 3.2rem; letter-spacing: -0.04em; color: rgba(255, 255, 255, 0.85); }
+.pill { position: absolute; top: 12px; right: 12px; padding: 2px 9px; font-size: 0.72rem; font-weight: 600; color: var(--accent-ink); background: var(--accent); border-radius: 3px; }
+.card-body { padding: 8px 20px 22px; padding-right: 44px; }
+.card-body h3 { font-family: var(--display); font-weight: 400; font-size: 1.45rem; letter-spacing: -0.03em; }
+.card-meta { margin-top: 4px; font-size: 0.72rem; color: var(--accent); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
 .card-blurb { margin-top: 10px; font-size: 0.9rem; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.card-arrow { position: absolute; right: 18px; bottom: 20px; color: var(--muted); opacity: 0.5; }
+.card-arrow { position: absolute; right: 18px; bottom: 20px; color: var(--accent); opacity: 0.6; }
 .more { display: flex; justify-content: center; margin-top: 28px; }
 
 .backdrop { position: fixed; inset: 0; z-index: 80; background: var(--scrim); backdrop-filter: blur(6px); }
@@ -38,3 +39,19 @@
 .detail-body .card-meta { margin: 6px 0 14px; }
 .detail-body .tags { margin-top: 16px; }
 .detail-close { position: absolute; top: 14px; right: 14px; }
+
+/* ---------- Index: every project, leaning right ---------- */
+.index { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 40px 56px; margin-top: 88px; }
+.index-cat { display: flex; align-items: baseline; gap: 10px; font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: -0.03em; margin-bottom: 10px; }
+.index-cat span { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); }
+.index ul { list-style: none; margin: 0; padding: 0; }
+.index li { padding-left: calc(var(--i) * 10px); }
+.index-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 0 12px; width: 100%; padding: 9px 0; text-align: left;
+  border-bottom: 1px solid var(--border); transition: color 0.2s, padding 0.3s var(--ease);
+}
+.index-row:hover { color: var(--accent); padding-left: 8px; }
+.index-title { font-weight: 500; }
+.index-tags { grid-column: 1; font-size: 0.78rem; color: var(--faint); }
+.index-status { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+@media (max-width: 640px) { .index li { padding-left: 0; } }

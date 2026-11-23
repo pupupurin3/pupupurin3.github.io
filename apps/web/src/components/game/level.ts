@@ -4,7 +4,7 @@ import type { Platform } from './physics'
 // Elements whose top edge is a platform. Headings use their text lines so
 // Purin stands on the words, not on the full-width block.
 const SOLID = [
-  '.btn', '.card', '.segmented', '.lab-tabs', '.cv-item',
+  '.btn', '.card', '.segmented', '.taskbar', '.win', '.desk-icon-tile', '.index-row', '.hero-new', '.cv-item',
   '.reorder-item', '.throw-area', '.shelf-plank', '.gallery', '.scroll-demo', '.about-person',
   '.tags span', '.section-index',
 ].join(',')
@@ -16,7 +16,7 @@ export const STARS: [string, number][] = [
   ['.hero-cta', 0.7],
   ['#work .section-header h2', 0.9],
   ['#work .card', 0.5],
-  ['.lab-tabs', 0.85],
+  ['.taskbar', 0.85],
   ['.about-person', 0.3],
   ['.about-cv .cv-item:last-child', 0.8],
   ['.contact-title', 0.6],

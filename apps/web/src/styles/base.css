@@ -3,7 +3,7 @@
   --sticker-back: #2f3a4f;
   color-scheme: light;
   --bg: #ffffff;
-  --grid-line: #cfe7f6;
+  --grid-line: #e2eff8;
   --grid-size: 28px;
   --surface: #ffffff;
   --surface-2: #f1f1ef;
@@ -13,7 +13,10 @@
   --text: #111113;
   --muted: #5d5f66;
   --faint: #8c8e95;
-  --accent: #2f6fe4;
+  --accent: #ff4f2e;
+  --navy: #1d2150;
+  --pale: #e3eef6;
+  --ice: #9fd0ea;
   --accent-ink: #ffffff;
   --error: #c2362f;
   --like: #e0456b;
@@ -26,6 +29,8 @@
   --shelf-back: #f1e5d4;
   --radius: 16px;
   --radius-sm: 10px;
+  --display: 'Josefin Sans', 'Inter', system-ui, sans-serif;
+  --rail: 0px;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   --max: 1160px;

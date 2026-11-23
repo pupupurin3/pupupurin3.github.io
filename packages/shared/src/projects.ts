@@ -40,6 +40,35 @@ export type Project = z.infer<typeof ProjectSchema>
 
 export const projects = [
   {
+    slug: 'angela-toy-figure',
+    title: 'Angela',
+    featured: true,
+    category: '3D',
+    status: 'In progress · 2026',
+    color: '#3a4a8c',
+    tags: ['Maya', 'Arnold', 'Character'],
+    blurb: 'A chibi toy figure modelled in Maya and rendered in Arnold with a toon look.',
+  },
+  {
+    slug: 'vending-machine',
+    title: 'Vending Machine',
+    featured: true,
+    category: '3D',
+    color: '#c0392b',
+    tags: ['Maya', 'Modelling'],
+    blurb: 'A vending machine modelled in Maya.',
+    model: 'models/vending-machine.glb',
+  },
+  {
+    slug: 'street-corner',
+    title: 'Street Corner',
+    category: '3D',
+    color: '#4f6d7a',
+    tags: ['Maya', 'Diorama'],
+    blurb: 'A small street corner diorama modelled in Maya.',
+    model: 'models/street-corner.glb',
+  },
+  {
     slug: 'carpe-diem',
     title: 'Carpe Diem',
     featured: true,
