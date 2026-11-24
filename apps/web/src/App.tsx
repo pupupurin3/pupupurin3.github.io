@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { About } from './components/about/About'
 import { Contact } from './components/contact/Contact'
-import { PlayLayer } from './components/game/PlayLayer'
 import { Hero } from './components/hero/Hero'
 import { Lab } from './components/lab/Lab'
 import { LoadingScreen } from './components/layout/LoadingScreen'
@@ -45,7 +44,6 @@ export default function App() {
           <Contact onToast={showToast} />
         </section>
       </main>
-      <PlayLayer show={started} onToast={showToast} />
       <CommandPalette onToast={showToast} />
       <Toast message={toast} />
     </ProjectStatsProvider>

@@ -28,7 +28,7 @@
 .hero-panel-inner { position: absolute; inset: 0; overflow: hidden; background: var(--pale); }
 /* Pinned hero: the section is taller than the screen and the hero sticks
    while the white side sweeps across the panel. */
-.hero-wrap.pinned { height: 210svh; }
+.hero-wrap.pinned { height: calc(100svh + var(--steps, 2) * 80svh); }
 .hero-wrap.pinned .hero { position: sticky; top: 0; height: 100svh; min-height: 0; }
 .hero-panel-bg { position: absolute; inset: -60px -40px; will-change: transform; background: 50% 100% / cover no-repeat; opacity: 0.55; filter: saturate(0.6); }
 .hero-panel-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(227, 238, 246, 0.9)); }
@@ -38,14 +38,21 @@
 @keyframes hero-float { 0%, 100% { transform: translateY(-9px); } 50% { transform: translateY(9px); } }
 @media (prefers-reduced-motion: reduce) { .hero-float { animation: none; } }
 .hero-viewer.model-viewer { position: absolute; inset: 0; background: transparent; }
-.hero-viewer .viewer-toolbar { top: auto; bottom: 86px; left: auto; right: 24px; }
 .hero-viewer .viewer-hint { display: none; }
-.hero-panel-foot { position: absolute; left: 18%; right: 24px; bottom: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; pointer-events: none; }
-.hero-models { display: flex; gap: 6px; pointer-events: auto; }
-.hero-models button { padding: 6px 14px; font-size: 0.82rem; border: 1px solid var(--navy); border-radius: 999px; color: var(--navy); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(6px); }
-.hero-models button.on { background: var(--navy); color: #fff; }
-.hero-model-note { font-family: var(--mono); font-size: 0.72rem; color: var(--navy); }
 
+.hero-dots { position: absolute; z-index: 2; right: 26px; top: 50%; translate: 0 -50%; display: grid; gap: 4px; }
+.hero-dots button { display: grid; place-items: center; width: 22px; height: 22px; }
+.hero-dots span { width: 7px; height: 7px; border-radius: 50%; background: color-mix(in srgb, var(--navy) 30%, transparent); transition: transform 0.35s var(--ease), background 0.2s, border-radius 0.35s; }
+.hero-dots button:hover span { background: var(--navy); }
+.hero-dots button.on span { width: 10px; height: 10px; border-radius: 1px; transform: rotate(45deg); background: transparent; border: 1.5px solid var(--accent); }
+.hero-model-meta { position: absolute; z-index: 2; right: 24px; bottom: 28px; }
+.hero-model-card { display: grid; grid-template-columns: auto auto; align-items: center; justify-items: end; gap: 2px 14px; padding: 12px 16px; text-align: right;
+  background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(8px); border-left: 2px solid var(--accent); }
+.hero-model-count { grid-column: 1 / -1; font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+.hero-model-card strong { grid-column: 1 / -1; font-family: var(--display); font-weight: 400; font-size: 1.5rem; letter-spacing: -0.02em; color: var(--navy); line-height: 1.1; }
+.hero-model-card time { font-family: var(--mono); font-size: 0.75rem; color: var(--navy); }
+.hero-model-tools { grid-column: 2; display: flex; gap: 8px; color: var(--navy); }
+.tool-icon { display: block; }
 .hero-new {
   position: absolute; z-index: 3; left: 0; bottom: 28px; display: flex; align-items: center; gap: 14px; max-width: min(560px, 92vw);
   padding: 12px 22px 12px clamp(24px, 4vw, 64px); text-align: left; font-size: 0.9rem; color: #fff; background: var(--accent);
@@ -60,7 +67,7 @@
   .hero-panel { margin: 0; height: 72svh; min-height: 420px; }
   /* On phones the panel slants across its top edge instead. */
   .hero-panel { clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%) !important; }
-  .hero-panel-foot { left: 16px; right: 16px; bottom: 76px; }
-  .hero-viewer .viewer-toolbar { top: 48px; bottom: auto; right: 12px; }
+    .hero-model-meta { right: 16px; bottom: 76px; }
+  .hero-dots { right: 10px; }
   .hero-new { bottom: 16px; padding-left: 20px; font-size: 0.82rem; }
 }

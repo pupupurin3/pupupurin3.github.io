@@ -31,7 +31,7 @@ export function Rail({ show }: { show: boolean }) {
       if (!hero) return setPastHero(true)
       // A pinned hero is taller than the screen: wait until its sweep is nearly done.
       const h = hero.offsetHeight, vh = window.innerHeight
-      setPastHero(window.scrollY > (h > vh * 1.5 ? (h - vh) * 0.85 : h * 0.6))
+      setPastHero(window.scrollY > (h > vh * 1.5 ? (h - vh) * 0.95 : h * 0.6))
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })

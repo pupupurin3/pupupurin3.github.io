@@ -46,19 +46,3 @@
 .like-btn.on { color: var(--like); border-color: color-mix(in srgb, var(--like) 40%, transparent); background: color-mix(in srgb, var(--like) 8%, var(--surface)); }
 .view-count { font-family: var(--mono); font-size: 0.8rem; }
 
-.play-post { display: flex; align-items: center; gap: 6px; }
-.play-post input {
-  width: 130px; padding: 6px 12px; font: inherit; color: var(--text); background: var(--surface);
-  border: 1px solid var(--border-strong); border-radius: 999px;
-}
-.play-post input:focus { outline: none; border-color: var(--accent); }
-.play-board { position: relative; }
-.play-board-list {
-  position: absolute; right: 0; bottom: calc(100% + 12px); min-width: 220px; margin: 0; padding: 8px; list-style: none;
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: 0 12px 30px var(--shadow);
-}
-.play-board-list li { display: grid; grid-template-columns: 20px 1fr auto; gap: 8px; padding: 6px 8px; color: var(--text); }
-.play-board-list li + li { border-top: 1px solid var(--border); }
-.play-board-list span, .play-board-list time { font-family: var(--mono); color: var(--faint); }
-.play-board-list strong { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.play-board-list .muted { display: block; color: var(--faint); }

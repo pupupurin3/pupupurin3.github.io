@@ -1,10 +1,11 @@
-import { useRef, useState, useSyncExternalStore, type PointerEvent } from 'react'
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from 'react'
+import { AnimatePresence, motion, useAnimationControls, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { profile } from '../../content/profile'
 import { heroModels } from '../../content/showcase'
 import { emit } from '../../lib/events'
 import { ease } from '../../lib/motion'
 import { ModelViewer } from '../three/LazyModelViewer'
+import { ToolIcon } from '../ui/ToolIcon'
 import { SECTIONS } from '../layout/Nav'
 
 // One letter that fades up out of a soft blur.
@@ -44,8 +45,26 @@ export function Hero({ start }: { start: boolean }) {
   // sweeps right across the model panel instead of the page moving up.
   const pinned = wide && !still
 
+  // While pinned, the first part of the scroll steps through the models and
+  // the last part sweeps the white side across.
+  const count = heroModels.length
+  const modelsEnd = count / (count + 1)
   const { scrollYProgress } = useScroll({ target: section, offset: pinned ? ['start start', 'end end'] : ['start start', 'end start'] })
-  const wipe = useTransform(scrollYProgress, [0, 0.9], [0, 1], { clamp: true })
+  const wipe = useTransform(scrollYProgress, [modelsEnd, modelsEnd + (1 - modelsEnd) * 0.9], [0, 1], { clamp: true })
+  useMotionValueEvent(scrollYProgress, 'change', (p) => {
+    if (pinned) setModelIdx(Math.min(count - 1, Math.floor((p / modelsEnd) * count)))
+  })
+  const showModel = (i: number) => {
+    const el = section.current
+    if (!pinned || !el) return setModelIdx(i)
+    const run = el.offsetHeight - window.innerHeight
+    window.scrollTo({ top: el.offsetTop + ((i + 0.5) / count) * modelsEnd * run, behavior: 'smooth' })
+  }
+  // Each new model rises in from below.
+  const swap = useAnimationControls()
+  useEffect(() => {
+    void swap.start({ opacity: [0, 1], y: [40, 0], transition: { duration: 0.6, ease } })
+  }, [modelIdx, swap])
   const wipeClip = useTransform(wipe, (w) => `polygon(${14 + 116 * w}% 0, 100% 0, 100% 100%, ${100 * w}% 100%)`)
   // Parallax: the photo, number and model drift at different rates while the
   // hero scrolls (or is swept away), and the cursor shifts them against each other.
@@ -76,7 +95,7 @@ export function Hero({ start }: { start: boolean }) {
   const [given = '', family = ''] = profile.name.toUpperCase().split(' ')
 
   return (
-    <section id="home" className={`hero-wrap ${pinned ? 'pinned' : ''}`} ref={section}>
+    <section id="home" className={`hero-wrap ${pinned ? 'pinned' : ''}`} ref={section} style={{ '--steps': count + 1 } as React.CSSProperties}>
     <div className="hero" onPointerMove={onPointer} onPointerLeave={() => { mx.set(0); my.set(0) }}>
       <motion.div className="hero-text" style={pinned ? { x: textX } : undefined}>
         <motion.p className="hero-kicker" {...fade(0.1, 6)}>
@@ -103,7 +122,7 @@ export function Hero({ start }: { start: boolean }) {
 
         <motion.div className="hero-cta" {...fade(1.5)}>
           <a href="#work" className="btn primary">View work</a>
-          <button className="btn" onClick={() => emit('toggle-game')}>▶ Play the site</button>
+          <a href="#lab" className="btn">Explore the lab</a>
         </motion.div>
       </motion.div>
 
@@ -118,19 +137,28 @@ export function Hero({ start }: { start: boolean }) {
         <motion.span className="hero-panel-no" aria-hidden="true" style={layer(noX, noY)}>{String(modelIdx + 1).padStart(2, '0')}</motion.span>
         {/* The model floats gently up and down (CSS) inside a parallax layer. */}
         <motion.div className="hero-float-layer" style={layer(modelX, modelY)}>
-          <div className="hero-float">
-            {start && <ModelViewer key={current.model} model={current.model} className="hero-viewer" />}
-          </div>
+          <motion.div className="hero-float" animate={swap}>
+            {start && <ModelViewer model={current.model} className="hero-viewer" chrome={false} zoom={false} />}
+          </motion.div>
         </motion.div>
-        <div className="hero-panel-foot">
-          <div className="hero-models" role="tablist" aria-label="3D models">
-            {heroModels.map((m, i) => (
-              <button key={m.name} role="tab" aria-selected={i === modelIdx} className={i === modelIdx ? 'on' : ''} onClick={() => setModelIdx(i)}>
-                {m.name}
-              </button>
-            ))}
-          </div>
-          <p className="hero-model-note">{current.note}</p>
+
+        <div className="hero-dots" role="tablist" aria-label="3D models" aria-orientation="vertical">
+          {heroModels.map((m, i) => (
+            <button key={m.name} role="tab" aria-selected={i === modelIdx} aria-label={m.name} className={i === modelIdx ? 'on' : ''} onClick={() => showModel(i)}>
+              <span />
+            </button>
+          ))}
+        </div>
+
+        <div className="hero-model-meta" aria-live="polite">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={current.name} className="hero-model-card" initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }} transition={{ duration: 0.35, ease }}>
+              <span className="hero-model-count">{String(modelIdx + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}</span>
+              <strong>{current.name}</strong>
+              {current.date && <time>{current.date}</time>}
+              <span className="hero-model-tools">{current.tools.map((t) => <ToolIcon key={t} tool={t} />)}</span>
+            </motion.div>
+          </AnimatePresence>
         </div>
         </motion.div>
       </motion.div>

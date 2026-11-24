@@ -38,8 +38,17 @@ class ModelBoundary extends Component<{ model: string; children: ReactNode }, { 
   }
 }
 
+interface ViewerProps {
+  model: string
+  className?: string
+  /** Show the Spin / Wireframe / Reset toolbar and the hint. */
+  chrome?: boolean
+  /** Let the wheel zoom. Off where the wheel should scroll the page. */
+  zoom?: boolean
+}
+
 /** Drag to orbit, scroll or pinch to zoom, with a few showcase toggles. */
-export function ModelViewer({ model, className = '' }: { model: string; className?: string }) {
+export function ModelViewer({ model, className = '', chrome = true, zoom = true }: ViewerProps) {
   const controls = useRef<OrbitControlsImpl>(null)
   const wrap = useRef<HTMLDivElement>(null)
   // Only render while on screen, so off-screen viewers don't burn GPU/battery.
@@ -66,20 +75,25 @@ export function ModelViewer({ model, className = '' }: { model: string; classNam
           autoRotateSpeed={1.2}
           enableDamping
           enablePan={false}
+          enableZoom={zoom}
           minDistance={1.6}
           maxDistance={7}
         />
       </Canvas>
-      <div className="viewer-toolbar">
-        <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate((v) => !v)}>
-          Spin
-        </button>
-        <button className={wireframe ? 'on' : ''} onClick={() => setWireframe((v) => !v)}>
-          Wireframe
-        </button>
-        <button onClick={() => controls.current?.reset()}>Reset</button>
-      </div>
-      <div className="viewer-hint">Drag to rotate · Scroll to zoom</div>
+      {chrome && (
+        <>
+          <div className="viewer-toolbar">
+            <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate((v) => !v)}>
+              Spin
+            </button>
+            <button className={wireframe ? 'on' : ''} onClick={() => setWireframe((v) => !v)}>
+              Wireframe
+            </button>
+            <button onClick={() => controls.current?.reset()}>Reset</button>
+          </div>
+          <div className="viewer-hint">Drag to rotate · Scroll to zoom</div>
+        </>
+      )}
     </div>
   )
 }
