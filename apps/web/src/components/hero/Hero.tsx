@@ -57,9 +57,36 @@ export function Hero({ start }: { start: boolean }) {
   const showModel = (i: number) => {
     const el = section.current
     if (!pinned || !el) return setModelIdx(i)
-    const run = el.offsetHeight - window.innerHeight
-    window.scrollTo({ top: el.offsetTop + ((i + 0.5) / count) * modelsEnd * run, behavior: 'smooth' })
+    const step = (el.offsetHeight - window.innerHeight) / (count + 1)
+    window.scrollTo({ top: el.offsetTop + (i === 0 ? 0 : (i + 0.3) * step), behavior: 'smooth' })
   }
+  // One wheel gesture = one step: each model, then the sweep. Trackpads fire
+  // many small events, so a step locks the wheel until it lands.
+  useEffect(() => {
+    const el = section.current
+    if (!pinned || !el) return
+    let lockUntil = 0
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || Math.abs(e.deltaY) < 2) return
+      const top = el.offsetTop, run = el.offsetHeight - window.innerHeight, step = run / (count + 1)
+      // Stops: each model (a little into its segment), then the swept-white end.
+      const stops = [0, ...Array.from({ length: count - 1 }, (_, i) => (i + 1.3) * step), run]
+      const y = window.scrollY - top
+      if (y < -2 || y > run + 2) return
+      const target = e.deltaY > 0 ? stops.find((s) => s > y + 4) : [...stops].reverse().find((s) => s < y - 4)
+      // Past the last stop (or before the first) the page scrolls normally.
+      if (target === undefined) return
+      e.preventDefault()
+      const now = performance.now()
+      // Keep the lock until the gesture (and a trackpad's momentum) pauses.
+      if (now < lockUntil) { lockUntil = Math.max(lockUntil, now + 400); return }
+      lockUntil = now + 900
+      window.scrollTo({ top: top + target, behavior: 'smooth' })
+    }
+    window.addEventListener('wheel', onWheel, { passive: false })
+    return () => window.removeEventListener('wheel', onWheel)
+  }, [pinned, count])
+
   // Each new model rises in from below.
   const swap = useAnimationControls()
   useEffect(() => {
