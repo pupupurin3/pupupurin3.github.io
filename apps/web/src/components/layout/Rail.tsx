@@ -8,12 +8,14 @@ import { SECTIONS } from './Nav'
 const ALL = [['home', 'Home'], ...SECTIONS] as const
 
 /**
- * A thin rail down the left edge on wide screens: the name set vertically,
- * a menu button (the command palette) and the current section, which rolls
- * over as you scroll.
+ * The vertical navbar down the left edge on wide screens. The strip (name,
+ * current section, arrows) is always there. Over the hero, which has its own
+ * links, the section links and the menu button are tucked away; once the
+ * hero scrolls off they slide in.
  */
 export function Rail({ show }: { show: boolean }) {
   const [active, setActive] = useState(0)
+  const [pastHero, setPastHero] = useState(false)
 
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -24,11 +26,17 @@ export function Rail({ show }: { show: boolean }) {
       const el = document.getElementById(id)
       if (el) io.observe(el)
     }
-    return () => io.disconnect()
+    const onScroll = () => {
+      const hero = document.getElementById('home')
+      setPastHero(!hero || window.scrollY > hero.offsetHeight * 0.6)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { io.disconnect(); window.removeEventListener('scroll', onScroll) }
   }, [])
 
   const go = (i: number) => document.getElementById(ALL[Math.min(Math.max(i, 0), ALL.length - 1)]![0])?.scrollIntoView({ behavior: 'smooth' })
-  const [, label] = ALL[Math.max(active, 0)]!
+  const [activeId, label] = ALL[Math.max(active, 0)]!
 
   return (
     <motion.aside className="rail" initial={{ x: '-100%' }} animate={show ? { x: 0 } : {}} transition={{ duration: 0.8, delay: 0.2, ease }}>
@@ -36,9 +44,34 @@ export function Rail({ show }: { show: boolean }) {
         <span>{profile.name}</span>
         <small>Portfolio</small>
       </a>
-      <button className="rail-menu" onClick={() => emit('open-palette')} aria-label="Open menu">
-        <span /><span /><span />
-      </button>
+
+      <AnimatePresence>
+        {pastHero && (
+          <motion.nav
+            className="rail-nav"
+            aria-label="Sections"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.45, ease }}
+          >
+            <button className="rail-menu" onClick={() => emit('open-palette')} aria-label="Open menu">
+              <span /><span /><span />
+            </button>
+            <ul>
+              {SECTIONS.map(([id, text], i) => (
+                <motion.li key={id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i, duration: 0.4, ease }}>
+                  <a href={`#${id}`} className={activeId === id ? 'on' : ''} aria-current={activeId === id ? 'true' : undefined}>
+                    {activeId === id && <motion.i layoutId="rail-dot" className="rail-dot" />}
+                    {text}
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+
       <div className="rail-foot">
         <div className="rail-section" aria-live="polite">
           <AnimatePresence mode="popLayout" initial={false}>
