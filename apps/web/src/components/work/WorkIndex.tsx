@@ -4,8 +4,8 @@ import { projects } from '../../content/projects'
 import { emit } from '../../lib/events'
 import { ease } from '../../lib/motion'
 
-const LABELS: Record<(typeof CATEGORIES)[number], string> = { '3D': '3D models', Games: 'Games', Simulations: 'Simulations', Apps: 'Apps' }
-const ORDER = ['3D', 'Games', 'Simulations', 'Apps'] as const
+const LABELS: Record<(typeof CATEGORIES)[number], string> = { '3D': '3D models', Projects: 'Projects', Simulations: 'Simulations', Apps: 'Apps' }
+const ORDER = ['Projects', '3D', 'Simulations', 'Apps'] as const
 
 /**
  * Every project as a slanted index, grouped by kind: each row steps a little

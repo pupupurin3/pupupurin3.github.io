@@ -3,6 +3,7 @@ import type { ShowToast } from '../../hooks/useToast'
 import { apiEnabled } from '../../lib/api'
 import { copyText } from '../../lib/platform'
 import { Reveal } from '../ui/Reveal'
+import { SocialLink } from '../ui/SocialIcon'
 import { ContactForm } from './ContactForm'
 import { Guestbook } from './Guestbook'
 
@@ -23,9 +24,8 @@ export function Contact({ onToast }: { onToast: ShowToast }) {
         <button className="btn" onClick={copy}>
           Copy email
         </button>
-        <a className="btn" href={profile.github} target="_blank" rel="noreferrer">
-          GitHub ↗
-        </a>
+        <SocialLink name="github" href={profile.github} />
+        {profile.linkedin && <SocialLink name="linkedin" href={profile.linkedin} />}
       </Reveal>
       {/* Both need the API; without it the section is just the links above. */}
       {apiEnabled && (

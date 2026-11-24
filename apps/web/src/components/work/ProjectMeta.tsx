@@ -3,17 +3,25 @@ import { motion } from 'framer-motion'
 import { projectLinks } from '@portfolio/shared'
 import type { Project } from '../../content/projects'
 import { useProjectStats } from '../../hooks/projectStats'
+import { SocialIcon } from '../ui/SocialIcon'
 
-/** "Games · Nov 2023" */
+/** "Projects · 2025" */
 export const projectKicker = (p: Project) => `${p.category}${p.status ? ` · ${p.status}` : ''}`
 
 /** Outbound links for a project's detail view. */
 export function ProjectLinks({ project, arrow = 'after' }: { project: Project; arrow?: 'before' | 'after' }) {
-  return projectLinks(project).map((l) => (
-    <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="btn primary">
-      {arrow === 'before' ? `↗ ${l.label}` : `${l.label} ↗`}
-    </a>
-  ))
+  return projectLinks(project).map((l) =>
+    l.url.startsWith('https://github.com/') ? (
+      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="btn primary">
+        <SocialIcon name="github" size={18} />
+        Source
+      </a>
+    ) : (
+      <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="btn primary">
+        {arrow === 'before' ? `↗ ${l.label}` : `${l.label} ↗`}
+      </a>
+    ),
+  )
 }
 
 /**

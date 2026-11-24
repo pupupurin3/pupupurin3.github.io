@@ -16,7 +16,6 @@ export function buildCommands(copyEmail: () => void): Command[] {
   return [
     { group: 'Navigate', label: 'Home', run: go('home') },
     { group: 'Navigate', label: 'Work', run: go('work') },
-    { group: 'Navigate', label: 'Lab', run: go('lab') },
     { group: 'Navigate', label: 'About', run: go('about') },
     { group: 'Navigate', label: 'Contact', run: go('contact') },
     ...projects.map((p) => ({
@@ -30,6 +29,7 @@ export function buildCommands(copyEmail: () => void): Command[] {
     })),
     { group: 'Links', label: 'Copy email address', hint: profile.email, run: copyEmail },
     { group: 'Links', label: 'Open GitHub', hint: 'github.com/pupupurin3', run: () => window.open(profile.github, '_blank', 'noopener') },
+    ...(profile.linkedin ? [{ group: 'Links', label: 'Open LinkedIn', run: () => window.open(profile.linkedin, '_blank', 'noopener') }] : []),
   ]
 }
 

@@ -5,7 +5,7 @@
 
 import { z } from 'zod'
 
-export const CATEGORIES = ['Games', 'Simulations', 'Apps', '3D'] as const
+export const CATEGORIES = ['Projects', 'Simulations', 'Apps', '3D'] as const
 export type Category = (typeof CATEGORIES)[number]
 
 export const ProjectLinkSchema = z.object({
@@ -60,83 +60,35 @@ export const projects = [
     model: 'models/street-corner.glb',
   },
   {
-    slug: 'carpe-diem',
-    title: 'Carpe Diem',
+    slug: 'obese-fat-gorilla-monkey',
+    title: 'Obese Fat Gorilla Monkey',
     featured: true,
-    category: 'Games',
-    status: 'In progress',
-    image: 'img/carpe-diem.jpg',
-    color: '#3b5b7a',
-    tags: ['Game Dev', 'Pixel Art'],
-    blurb: 'My original game, currently in development.',
+    category: 'Projects',
+    status: 'In progress · 2026',
+    color: '#5a3d2b',
+    tags: ['Unity', 'C#', 'Multiplayer'],
+    blurb: 'An online social hub for card games, built in Unity. You walk around a lounge as a monkey, chat and emote with other players, and sit down at a table to play. The first game is Cambio, with Elo ratings, spectating, a turn timer and a bot that only learns cards it is allowed to see.',
+    repo: 'ObeseFatGorillaMonkey',
   },
   {
-    slug: 'blackjack-simulator',
-    title: 'Blackjack Simulator',
+    slug: 'renderlab',
+    title: 'RenderLab',
     featured: true,
-    category: 'Games',
-    status: 'Nov 2023',
-    image: 'img/blackjack.jpg',
-    color: '#1f7a3a',
-    tags: ['Python'],
-    blurb: 'A playable blackjack game with hit and stand controls.',
-    links: [{ label: 'Play on Replit', url: 'https://replit.com/@NoahMatsukuma/125-Shall-We-Play-a-Game' }],
+    category: 'Projects',
+    status: '2024 – present',
+    color: '#2b3f5a',
+    tags: ['Java', 'Swing', 'Graphics'],
+    blurb: 'A 3D rendering system written from scratch in Java. An editor turns three orthographic views into a 3D model, drawn by a multithreaded rasterizer with depth buffering, soft shadows and anti-aliasing. It renders a 720p frame in 5 to 8 ms; profiling with Java Flight Recorder and caching exposed faces and shadows cut frame time by 48%.',
   },
   {
-    slug: 'virtual-escape-room',
-    title: 'Virtual Escape Room',
+    slug: 'scambio',
+    title: 'SCAMBIO',
     featured: true,
-    category: 'Games',
-    color: '#5b3b7a',
-    tags: ['Team project', 'Game Dev'],
-    blurb: 'The 2D top-down escape room game I built as Chief Programmer with a team of 8.',
-    repo: 'Project_VirtualEscapeRoom',
-  },
-  {
-    slug: 'hanafuda',
-    title: 'Hanafuda',
-    featured: true,
-    category: 'Games',
-    color: '#b23a48',
-    tags: ['Card game'],
-    blurb: 'A take on the traditional Japanese Hanafuda card game.', // TODO
-    repo: 'Hanafuda',
-  },
-  {
-    slug: 'coup-web-app',
-    title: 'Coup Web App',
-    category: 'Games',
-    color: '#7a5b3b',
-    tags: ['Web', 'Card game'],
-    blurb: 'A web version of the card game Coup.', // TODO
-    repo: 'Project_CoupWebApp',
-  },
-  {
-    slug: 'tetois',
-    title: 'TetOis',
-    category: 'Games',
-    color: '#3b7a74',
-    tags: ['Puzzle'],
-    blurb: 'A falling-block puzzle game.', // TODO
-    repo: 'Project_TetOis',
-  },
-  {
-    slug: 'minesweeper',
-    title: 'Minesweeper',
-    category: 'Games',
-    color: '#596273',
-    tags: ['Puzzle'],
-    blurb: 'A recreation of classic Minesweeper.', // TODO
-    repo: 'Project_Minesweeper',
-  },
-  {
-    slug: 'pancake-stacker',
-    title: 'Pancake Stacker',
-    category: 'Games',
-    color: '#c58a3a',
-    tags: ['Arcade'],
-    blurb: 'A pancake stacking game.', // TODO
-    repo: 'Project_PancakeStacker',
+    category: 'Apps',
+    status: '2025',
+    color: '#8c2f3a',
+    tags: ['React', 'Node.js', 'Team project'],
+    blurb: 'Winner of the Congressional App Challenge for CA-43. An app that helps families learn to recognise scam messages: I built the React training interface and a Node.js API that serves simulated scams to spot.',
   },
   {
     slug: 'fluid-simulation',

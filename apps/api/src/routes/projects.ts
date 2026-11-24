@@ -6,7 +6,7 @@ import { MINUTE, utcDay } from '../lib/time'
 import { visitorId } from '../lib/visitor'
 import { rateLimit } from '../middleware/rateLimit'
 
-const SlugParam = z.object({ slug: z.string().max(64).meta({ example: 'hanafuda' }) })
+const SlugParam = z.object({ slug: z.string().max(64).meta({ example: 'fluid-simulation' }) })
 
 function findProject(slug: string) {
   const project = projects.find((p) => p.slug === slug)

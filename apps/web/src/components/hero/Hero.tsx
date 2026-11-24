@@ -149,7 +149,7 @@ export function Hero({ start }: { start: boolean }) {
 
         <motion.div className="hero-cta" {...fade(1.5)}>
           <a href="#work" className="btn primary">View work</a>
-          <a href="#lab" className="btn">Explore the lab</a>
+          <a href="#about" className="btn">About me</a>
         </motion.div>
       </motion.div>
 

@@ -9,15 +9,14 @@ describe('project catalogue', () => {
   })
 
   it('recognises catalogue slugs only', () => {
-    expect(isProjectSlug('hanafuda')).toBe(true)
+    expect(isProjectSlug('renderlab')).toBe(true)
     expect(isProjectSlug('not-a-project')).toBe(false)
   })
 
   it('adds the GitHub repo after a project’s own links', () => {
-    const blackjack = projects.find((p) => p.slug === 'blackjack-simulator')!
-    expect(projectLinks(blackjack).map((l) => l.label)).toEqual(['Play on Replit'])
-    const hanafuda = projects.find((p) => p.slug === 'hanafuda')!
-    expect(projectLinks(hanafuda)).toEqual([{ label: 'Source on GitHub', url: 'https://github.com/pupupurin3/Hanafuda' }])
+    expect(projectLinks({ links: [{ label: 'Demo', url: 'https://example.com/' }], repo: 'Repo' }).map((l) => l.label)).toEqual(['Demo', 'Source on GitHub'])
+    const ofgm = projects.find((p) => p.slug === 'obese-fat-gorilla-monkey')!
+    expect(projectLinks(ofgm)).toEqual([{ label: 'Source on GitHub', url: 'https://github.com/pupupurin3/ObeseFatGorillaMonkey' }])
   })
 })
 
