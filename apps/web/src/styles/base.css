@@ -3,11 +3,6 @@
   --sticker-back: #2f3a4f;
   color-scheme: light;
   --bg: #ffffff;
-  --grid-line: #dcebf6;
-  /* Hatch lines lean like the hero panel's edge; one period along x is gap / sin(angle). */
-  --hatch-angle: 112deg;
-  --hatch-gap: 12px;
-  --hatch-gap-x: 12.94px;
   --surface: #ffffff;
   --surface-2: #f1f1ef;
   --border: #e5e5e2;
@@ -53,21 +48,6 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-/* Hatching: fine pastel blue diagonal lines on white, leaning the same way
-   as the slanted panels, drifting very slowly and fading out at the edges. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: -40px;
-  z-index: -1;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(var(--hatch-angle), var(--grid-line) 0 1px, transparent 1px var(--hatch-gap));
-  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 50%, transparent 100%);
-  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 50%, transparent 100%);
-  animation: hatch-drift 18s linear infinite;
-}
-@keyframes hatch-drift { to { transform: translateX(var(--hatch-gap-x)); } }
-@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; padding: 0; }
 img { display: block; max-width: 100%; }
