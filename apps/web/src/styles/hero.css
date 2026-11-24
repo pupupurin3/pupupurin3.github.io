@@ -25,9 +25,13 @@
 .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
 
 .hero-panel { position: relative; z-index: 1; margin-left: -6vw; background: var(--pale); }
-.hero-panel-bg { position: absolute; inset: 0; background: 50% 100% / cover no-repeat; opacity: 0.55; filter: saturate(0.6); }
+.hero-panel-bg { position: absolute; inset: -60px -40px; will-change: transform; background: 50% 100% / cover no-repeat; opacity: 0.55; filter: saturate(0.6); }
 .hero-panel-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(227, 238, 246, 0.9)); }
 .hero-panel-no { position: absolute; top: 18px; right: 28px; font-family: var(--display); font-size: clamp(4rem, 10vw, 9rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--navy); opacity: 0.5; pointer-events: none; }
+.hero-float-layer, .hero-float { position: absolute; inset: 0; }
+.hero-float { animation: hero-float 7s ease-in-out infinite; }
+@keyframes hero-float { 0%, 100% { transform: translateY(-9px); } 50% { transform: translateY(9px); } }
+@media (prefers-reduced-motion: reduce) { .hero-float { animation: none; } }
 .hero-viewer.model-viewer { position: absolute; inset: 0; background: transparent; }
 .hero-viewer .viewer-toolbar { top: auto; bottom: 86px; left: auto; right: 24px; }
 .hero-viewer .viewer-hint { display: none; }

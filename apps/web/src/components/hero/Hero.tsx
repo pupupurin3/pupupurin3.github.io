@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useState, type PointerEvent } from 'react'
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { profile } from '../../content/profile'
 import { heroModels } from '../../content/showcase'
 import { emit } from '../../lib/events'
@@ -37,6 +37,27 @@ function FadeLetters({ words, start, delay = 0, step = 0.045, className }: { wor
  */
 export function Hero({ start }: { start: boolean }) {
   const [modelIdx, setModelIdx] = useState(0)
+  const section = useRef<HTMLElement>(null)
+  const still = useReducedMotion()
+
+  // Parallax: as the hero scrolls away the photo sinks and the number rises,
+  // and the cursor tilts the layers against each other by different amounts.
+  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end start'] })
+  const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
+  const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
+  const bgY = useTransform(() => scrollYProgress.get() * 140 + my.get() * 10)
+  const bgX = useTransform(() => mx.get() * -14)
+  const noY = useTransform(() => scrollYProgress.get() * -220 + my.get() * -22)
+  const noX = useTransform(() => mx.get() * 26)
+  const modelY = useTransform(() => scrollYProgress.get() * 60 + my.get() * 8)
+  const modelX = useTransform(() => mx.get() * 12)
+  const onPointer = (e: PointerEvent) => {
+    if (still || e.pointerType !== 'mouse') return
+    const r = e.currentTarget.getBoundingClientRect()
+    mx.set(((e.clientX - r.left) / r.width) * 2 - 1)
+    my.set(((e.clientY - r.top) / r.height) * 2 - 1)
+  }
+  const layer = (x: typeof bgX, y: typeof bgY) => (still ? undefined : { x, y })
   const current = heroModels[modelIdx]!
   const fade = (delay: number, y = 14) => ({
     initial: { opacity: 0, y },
@@ -46,7 +67,7 @@ export function Hero({ start }: { start: boolean }) {
   const [given = '', family = ''] = profile.name.toUpperCase().split(' ')
 
   return (
-    <section id="home" className="hero">
+    <section id="home" className="hero" ref={section} onPointerMove={onPointer} onPointerLeave={() => { mx.set(0); my.set(0) }}>
       <div className="hero-text">
         <motion.p className="hero-kicker" {...fade(0.1, 6)}>
           <span>Portfolio</span>
@@ -82,9 +103,14 @@ export function Hero({ start }: { start: boolean }) {
         animate={start ? { clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' } : {}}
         transition={{ duration: 1.3, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
       >
-        <div className="hero-panel-bg" aria-hidden="true" style={{ backgroundImage: `url(${profile.heroPhoto})` }} />
-        <span className="hero-panel-no" aria-hidden="true">{String(modelIdx + 1).padStart(2, '0')}</span>
-        {start && <ModelViewer key={current.model} model={current.model} className="hero-viewer" />}
+        <motion.div className="hero-panel-bg" aria-hidden="true" style={{ backgroundImage: `url(${profile.heroPhoto})`, ...layer(bgX, bgY) }} />
+        <motion.span className="hero-panel-no" aria-hidden="true" style={layer(noX, noY)}>{String(modelIdx + 1).padStart(2, '0')}</motion.span>
+        {/* The model floats gently up and down (CSS) inside a parallax layer. */}
+        <motion.div className="hero-float-layer" style={layer(modelX, modelY)}>
+          <div className="hero-float">
+            {start && <ModelViewer key={current.model} model={current.model} className="hero-viewer" />}
+          </div>
+        </motion.div>
         <div className="hero-panel-foot">
           <div className="hero-models" role="tablist" aria-label="3D models">
             {heroModels.map((m, i) => (
