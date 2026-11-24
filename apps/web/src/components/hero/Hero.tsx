@@ -1,4 +1,4 @@
-import { useRef, useState, type PointerEvent } from 'react'
+import { useRef, useState, useSyncExternalStore, type PointerEvent } from 'react'
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { profile } from '../../content/profile'
 import { heroModels } from '../../content/showcase'
@@ -39,18 +39,27 @@ export function Hero({ start }: { start: boolean }) {
   const [modelIdx, setModelIdx] = useState(0)
   const section = useRef<HTMLElement>(null)
   const still = useReducedMotion()
+  const wide = useWide()
+  // On wide screens the hero is pinned while you scroll, and the white side
+  // sweeps right across the model panel instead of the page moving up.
+  const pinned = wide && !still
 
-  // Parallax: as the hero scrolls away the photo sinks and the number rises,
-  // and the cursor tilts the layers against each other by different amounts.
-  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end start'] })
+  const { scrollYProgress } = useScroll({ target: section, offset: pinned ? ['start start', 'end end'] : ['start start', 'end start'] })
+  const wipe = useTransform(scrollYProgress, [0, 0.9], [0, 1], { clamp: true })
+  const wipeClip = useTransform(wipe, (w) => `polygon(${14 + 116 * w}% 0, 100% 0, 100% 100%, ${100 * w}% 100%)`)
+  // Parallax: the photo, number and model drift at different rates while the
+  // hero scrolls (or is swept away), and the cursor shifts them against each other.
   const mx = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
   const my = useSpring(useMotionValue(0), { stiffness: 60, damping: 18 })
-  const bgY = useTransform(() => scrollYProgress.get() * 140 + my.get() * 10)
-  const bgX = useTransform(() => mx.get() * -14)
-  const noY = useTransform(() => scrollYProgress.get() * -220 + my.get() * -22)
-  const noX = useTransform(() => mx.get() * 26)
-  const modelY = useTransform(() => scrollYProgress.get() * 60 + my.get() * 8)
-  const modelX = useTransform(() => mx.get() * 12)
+  const sy = (n: number) => (pinned ? 0 : scrollYProgress.get() * n)
+  const sx = (n: number) => (pinned ? wipe.get() * n : 0)
+  const bgY = useTransform(() => sy(140) + my.get() * 10)
+  const bgX = useTransform(() => sx(90) + mx.get() * -14)
+  const noY = useTransform(() => sy(-220) + my.get() * -22)
+  const noX = useTransform(() => sx(-160) + mx.get() * 26)
+  const modelY = useTransform(() => sy(60) + my.get() * 8)
+  const modelX = useTransform(() => sx(220) + mx.get() * 12)
+  const textX = useTransform(() => sx(60))
   const onPointer = (e: PointerEvent) => {
     if (still || e.pointerType !== 'mouse') return
     const r = e.currentTarget.getBoundingClientRect()
@@ -67,8 +76,9 @@ export function Hero({ start }: { start: boolean }) {
   const [given = '', family = ''] = profile.name.toUpperCase().split(' ')
 
   return (
-    <section id="home" className="hero" ref={section} onPointerMove={onPointer} onPointerLeave={() => { mx.set(0); my.set(0) }}>
-      <div className="hero-text">
+    <section id="home" className={`hero-wrap ${pinned ? 'pinned' : ''}`} ref={section}>
+    <div className="hero" onPointerMove={onPointer} onPointerLeave={() => { mx.set(0); my.set(0) }}>
+      <motion.div className="hero-text" style={pinned ? { x: textX } : undefined}>
         <motion.p className="hero-kicker" {...fade(0.1, 6)}>
           <span>Portfolio</span>
           <span>{new Date().getFullYear()}</span>
@@ -95,7 +105,7 @@ export function Hero({ start }: { start: boolean }) {
           <a href="#work" className="btn primary">View work</a>
           <button className="btn" onClick={() => emit('toggle-game')}>▶ Play the site</button>
         </motion.div>
-      </div>
+      </motion.div>
 
       <motion.div
         className="hero-panel"
@@ -103,6 +113,7 @@ export function Hero({ start }: { start: boolean }) {
         animate={start ? { clipPath: 'polygon(14% 0, 100% 0, 100% 100%, 0% 100%)' } : {}}
         transition={{ duration: 1.3, delay: 0.15, ease: [0.76, 0, 0.24, 1] }}
       >
+        <motion.div className="hero-panel-inner" style={pinned ? { clipPath: wipeClip } : undefined}>
         <motion.div className="hero-panel-bg" aria-hidden="true" style={{ backgroundImage: `url(${profile.heroPhoto})`, ...layer(bgX, bgY) }} />
         <motion.span className="hero-panel-no" aria-hidden="true" style={layer(noX, noY)}>{String(modelIdx + 1).padStart(2, '0')}</motion.span>
         {/* The model floats gently up and down (CSS) inside a parallax layer. */}
@@ -121,6 +132,7 @@ export function Hero({ start }: { start: boolean }) {
           </div>
           <p className="hero-model-note">{current.note}</p>
         </div>
+        </motion.div>
       </motion.div>
 
       <motion.button className="hero-new" onClick={() => emit('open-project', 'angela-toy-figure')} {...fade(1.7, 20)}>
@@ -128,6 +140,21 @@ export function Hero({ start }: { start: boolean }) {
         <span>Angela, a chibi toy figure in Maya + Arnold</span>
         <span aria-hidden="true">→</span>
       </motion.button>
+    </div>
     </section>
+  )
+}
+
+const WIDE = '(min-width: 901px)'
+/** True on screens wide enough for the side-by-side hero. */
+function useWide() {
+  return useSyncExternalStore(
+    (cb) => {
+      const m = window.matchMedia(WIDE)
+      m.addEventListener('change', cb)
+      return () => m.removeEventListener('change', cb)
+    },
+    () => window.matchMedia(WIDE).matches,
+    () => true,
   )
 }

@@ -24,7 +24,12 @@
 .hero-link-no { font-family: var(--mono); font-size: 0.7rem; color: var(--faint); }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
 
-.hero-panel { position: relative; z-index: 1; margin-left: -6vw; background: var(--pale); }
+.hero-panel { position: relative; z-index: 1; margin-left: -6vw; }
+.hero-panel-inner { position: absolute; inset: 0; overflow: hidden; background: var(--pale); }
+/* Pinned hero: the section is taller than the screen and the hero sticks
+   while the white side sweeps across the panel. */
+.hero-wrap.pinned { height: 210svh; }
+.hero-wrap.pinned .hero { position: sticky; top: 0; height: 100svh; min-height: 0; }
 .hero-panel-bg { position: absolute; inset: -60px -40px; will-change: transform; background: 50% 100% / cover no-repeat; opacity: 0.55; filter: saturate(0.6); }
 .hero-panel-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(227, 238, 246, 0.9)); }
 .hero-panel-no { position: absolute; top: 18px; right: 28px; font-family: var(--display); font-size: clamp(4rem, 10vw, 9rem); line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--navy); opacity: 0.5; pointer-events: none; }
