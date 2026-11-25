@@ -137,6 +137,10 @@
           "model": {
             "type": "string"
           },
+          "video": {
+            "type": "string",
+            "pattern": "^[\\w-]{11}$"
+          },
           "stats": {
             "$ref": "#/components/schemas/ProjectStats"
           }

@@ -37,6 +37,8 @@ export const ProjectSchema = z.object({
    * ('purin', 'mars', 'maze') or a path to a .glb under public/models.
    */
   model: z.string().optional(),
+  /** YouTube video id, shown in the project's detail view. */
+  video: z.string().regex(/^[\w-]{11}$/).optional(),
 }).meta({ id: 'Project' })
 export type Project = z.infer<typeof ProjectSchema>
 
@@ -86,6 +88,7 @@ export const projects = [
     status: '2024 – present',
     color: '#2b3f5a',
     tags: ['Java', 'Swing', 'Graphics'],
+    repo: 'RenderLab',
     blurb: 'A 3D rendering system written from scratch in Java. An editor turns three orthographic views into a 3D model, drawn by a multithreaded rasterizer with depth buffering, soft shadows and anti-aliasing. It renders a 720p frame in 5 to 8 ms; profiling with Java Flight Recorder and caching exposed faces and shadows cut frame time by 48%.',
   },
   {
@@ -96,7 +99,12 @@ export const projects = [
     status: '2025',
     color: '#8c2f3a',
     tags: ['React', 'Node.js', 'Team project'],
-    blurb: 'Winner of the Congressional App Challenge for CA-43. An app that helps families learn to recognise scam messages: I built the React training interface and a Node.js API that serves simulated scams to spot.',
+    blurb: 'Winner of Rep. Maxine Waters’ 2025 Congressional App Challenge for California’s 43rd District, built with Jin Noguchi. A web app that helps families protect each other from scams: it checks messages for signs of a scam, teaches the red flags, and lets you practise on realistic simulated scams. I built the React training interface and the Node.js API that serves the simulations.',
+    video: 'Psqxo44qtFQ',
+    links: [
+      { label: 'Congressional App Challenge', url: 'https://www.congressionalappchallenge.us/25-ca43/' },
+      { label: 'Source on GitHub', url: 'https://github.com/jin-noguchi/congressional-app-challenge' },
+    ],
   },
   {
     slug: 'fluid-simulation',

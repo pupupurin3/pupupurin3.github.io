@@ -32,6 +32,15 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
           <motion.div className="detail-media" layoutId={`media-${id}`}>
             {project.model ? (
               <ModelViewer model={project.model} />
+            ) : project.video ? (
+              <iframe
+                className="detail-video"
+                src={`https://www.youtube-nocookie.com/embed/${project.video}?rel=0&playsinline=1`}
+                title={`${project.title} video`}
+                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                loading="lazy"
+              />
             ) : gallery.length ? (
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.img key={shot} className="detail-shot" src={gallery[shot]!.src} alt={gallery[shot]!.alt} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} />
