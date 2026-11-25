@@ -1,13 +1,10 @@
 // Typed window events that let distant components talk without prop
-// drilling: the command palette opens projects, the hero starts the game.
+// drilling: the command palette and the hero open projects.
 
 export interface SiteEvents {
   /** Open a project's details by slug. */
   'open-project': string
-  'toggle-game': undefined
   'open-palette': undefined
-  /** A run was posted, so an open leaderboard should refresh. */
-  'leaderboard-changed': undefined
 }
 
 type EventName = keyof SiteEvents

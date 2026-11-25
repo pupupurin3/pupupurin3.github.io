@@ -66,7 +66,7 @@
           "category": {
             "type": "string",
             "enum": [
-              "Games",
+              "Projects",
               "Simulations",
               "Apps",
               "3D"
@@ -80,6 +80,24 @@
           },
           "image": {
             "type": "string"
+          },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "src": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "src",
+                "alt"
+              ]
+            }
           },
           "color": {
             "type": "string",
@@ -118,6 +136,10 @@
           },
           "model": {
             "type": "string"
+          },
+          "video": {
+            "type": "string",
+            "pattern": "^[\\w-]{11}$"
           },
           "stats": {
             "$ref": "#/components/schemas/ProjectStats"
@@ -561,7 +583,7 @@
             "schema": {
               "type": "string",
               "maxLength": 64,
-              "example": "hanafuda"
+              "example": "fluid-simulation"
             },
             "required": true,
             "name": "slug",
@@ -604,7 +626,7 @@
             "schema": {
               "type": "string",
               "maxLength": 64,
-              "example": "hanafuda"
+              "example": "fluid-simulation"
             },
             "required": true,
             "name": "slug",
@@ -650,7 +672,7 @@
             "schema": {
               "type": "string",
               "maxLength": 64,
-              "example": "hanafuda"
+              "example": "fluid-simulation"
             },
             "required": true,
             "name": "slug",
@@ -700,7 +722,7 @@
             "schema": {
               "type": "string",
               "maxLength": 64,
-              "example": "hanafuda"
+              "example": "fluid-simulation"
             },
             "required": true,
             "name": "slug",

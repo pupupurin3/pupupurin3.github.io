@@ -7,7 +7,6 @@ import { modKey } from '../../lib/platform'
 
 export const SECTIONS = [
   ['work', 'Work'],
-  ['lab', 'Lab'],
   ['about', 'About'],
   ['contact', 'Contact'],
 ] as const

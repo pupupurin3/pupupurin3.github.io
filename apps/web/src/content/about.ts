@@ -32,43 +32,50 @@ export interface AboutPhoto {
 }
 
 export const skills: SkillGroup[] = [
-  { group: 'Languages', items: ['Python', 'C++', 'C#', 'HTML'] },
-  { group: 'Engines & tools', items: ['Unity', 'WordPress', 'GitHub'] },
-  { group: 'Craft', items: ['Game design', '3D modelling', 'Team leadership'] },
+  { group: 'Languages', items: ['Java', 'C#', 'C++', 'Python', 'TypeScript'] },
+  { group: 'Frameworks & engines', items: ['React', 'Node.js', 'Three.js', 'Unity'] },
+  { group: 'Tools', items: ['Maya', 'Arnold', 'Git & GitHub', 'Docker', 'Notion'] },
+  { group: 'Spoken', items: ['English', 'Japanese'] },
 ]
 
 export const experience: Experience[] = [
   {
-    title: 'Chief Programmer',
-    org: '2D top-down escape room game',
+    title: 'Web Development Intern',
+    org: 'Anatano Kakehashi · Jun – Aug 2024',
     points: [
-      'Collaborated in a cross-functional team of 8 to develop a captivating 2D top-down escape room video game.',
-      'Used various APIs to build a real-time data system for a seamless, immersive experience.',
-      'Managed branches, reviewed pull requests and ran code reviews on GitHub to keep code quality high.',
-      'Organized team tasks in Kanbanchi and ran stand-up meetings to keep the project on schedule.',
+      'Worked on a React website that introduces students to programming courses and tutoring services.',
+      'Updated the site\'s metadata so search engines describe the tutoring services properly.',
+      'Co-wrote lecture slides for an introductory course that teaches programming through Minecraft.',
     ],
   },
   {
-    title: 'President of Class Council',
-    org: 'Nishiyamato Japanese Academy',
+    title: 'Chief Programmer',
+    org: 'Virtual Escape Room (C#, Unity) · Apr – Jun 2023',
     points: [
-      'Worked with teachers to help students submit assignments, raising submissions by about 20% over the previous semester.',
-      'Gave the opening speech of the school year to over 150 students from 4th to 9th grade.',
-      'Read the Starting Oath of the annual sporting event.',
+      'Led software development for an eight-person team building a 2D top-down escape room game.',
+      'Integrated several APIs to bring real-time data into the game.',
+      'Managed GitHub branches and reviewed pull requests before merging.',
+      'Ran stand-ups and tracked assignments in Kanbanchi against project deadlines.',
     ],
   },
 ]
 
 export const education: Education[] = [
   {
-    school: 'California Academy of Mathematics and Science',
-    dates: 'Aug 2022 - Present',
-    detail: 'GPA 4.31',
-    courses: ['AP Computer Science Principles', 'Intro to Web Development', 'AP Precalculus'],
+    school: 'El Camino College',
+    dates: 'Fall 2026 – present',
+    detail: 'Computer Science · GPA 4.0',
+    courses: ['Intro to Computer Science (CSCI-1)', 'Calculus I'],
   },
   {
-    school: 'Nishiyamato Japanese Academy',
-    dates: 'Apr 2013 - Mar 2024',
+    school: 'California Academy of Mathematics and Science',
+    dates: 'Graduated June 2026',
+    detail: 'GPA 4.4',
+    courses: ['AP Calculus BC', 'Intro to Web Development', 'Intro to Graphic Design'],
+  },
+  {
+    school: 'Nishiyamato Japanese Academy of California',
+    dates: 'Graduated March 2024',
   },
 ]
 

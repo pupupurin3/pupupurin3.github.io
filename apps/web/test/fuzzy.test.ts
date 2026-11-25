@@ -23,7 +23,7 @@ describe('command search', () => {
   })
 
   it('ranks the best match first', () => {
-    expect(searchCommands(commands, 'hanaf')[0]?.label).toBe('Hanafuda')
+    expect(searchCommands(commands, 'rendl')[0]?.label).toBe('RenderLab')
     expect(searchCommands(commands, 'github')[0]?.label).toBe('Open GitHub')
   })
 

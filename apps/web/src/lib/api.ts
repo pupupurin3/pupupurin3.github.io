@@ -1,12 +1,8 @@
 import type {
   Accepted,
   ContactInput,
-  GameRunFinishInput,
-  GameRunResult,
-  GameRunStart,
   GuestbookEntryInput,
   GuestbookPage,
-  Leaderboard,
   Problem,
   ProjectList,
   ProjectStats,
@@ -65,8 +61,4 @@ export const api = {
 
   contact: (input: ContactInput) => request<Accepted>('/v1/contact', { method: 'POST', json: input }),
 
-  startRun: () => request<GameRunStart>('/v1/game/runs', { method: 'POST' }),
-  finishRun: (runId: string, input: GameRunFinishInput) =>
-    request<GameRunResult>(`/v1/game/runs/${runId}/finish`, { method: 'POST', json: input }),
-  leaderboard: (limit = 5) => request<Leaderboard>(`/v1/game/leaderboard?limit=${limit}`),
 }

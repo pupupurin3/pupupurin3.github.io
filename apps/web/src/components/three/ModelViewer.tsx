@@ -38,8 +38,17 @@ class ModelBoundary extends Component<{ model: string; children: ReactNode }, { 
   }
 }
 
+interface ViewerProps {
+  model: string
+  className?: string
+  /** Show the Spin / Wireframe / Reset toolbar and the hint. */
+  chrome?: boolean
+  /** Let the wheel zoom. Off where the wheel should scroll the page. */
+  zoom?: boolean
+}
+
 /** Drag to orbit, scroll or pinch to zoom, with a few showcase toggles. */
-export function ModelViewer({ model, className = '' }: { model: string; className?: string }) {
+export function ModelViewer({ model, className = '', chrome = true, zoom = true }: ViewerProps) {
   const controls = useRef<OrbitControlsImpl>(null)
   const wrap = useRef<HTMLDivElement>(null)
   // Only render while on screen, so off-screen viewers don't burn GPU/battery.
@@ -49,7 +58,7 @@ export function ModelViewer({ model, className = '' }: { model: string; classNam
 
   return (
     <div ref={wrap} className={`model-viewer ${className}`}>
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [2.4, 1.8, 2.6], fov: 40 }} frameloop={inView ? 'always' : 'never'}>
+      <Canvas shadows dpr={[1, 2]} resize={{ offsetSize: true }} camera={{ position: [2.4, 1.8, 2.6], fov: 40 }} frameloop={inView ? 'always' : 'never'}>
         <hemisphereLight args={['#cfe6ff', '#1b2333', 0.9]} />
         <directionalLight position={[3, 5, 2]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} />
         <directionalLight position={[-3, 2, -2]} intensity={0.6} color="#7fb8ff" />
@@ -66,20 +75,25 @@ export function ModelViewer({ model, className = '' }: { model: string; classNam
           autoRotateSpeed={1.2}
           enableDamping
           enablePan={false}
+          enableZoom={zoom}
           minDistance={1.6}
           maxDistance={7}
         />
       </Canvas>
-      <div className="viewer-toolbar">
-        <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate((v) => !v)}>
-          Spin
-        </button>
-        <button className={wireframe ? 'on' : ''} onClick={() => setWireframe((v) => !v)}>
-          Wireframe
-        </button>
-        <button onClick={() => controls.current?.reset()}>Reset</button>
-      </div>
-      <div className="viewer-hint">Drag to rotate · Scroll to zoom</div>
+      {chrome && (
+        <>
+          <div className="viewer-toolbar">
+            <button className={autoRotate ? 'on' : ''} onClick={() => setAutoRotate((v) => !v)}>
+              Spin
+            </button>
+            <button className={wireframe ? 'on' : ''} onClick={() => setWireframe((v) => !v)}>
+              Wireframe
+            </button>
+            <button onClick={() => controls.current?.reset()}>Reset</button>
+          </div>
+          <div className="viewer-hint">Drag to rotate · Scroll to zoom</div>
+        </>
+      )}
     </div>
   )
 }

@@ -12,11 +12,11 @@ describe('project filters', () => {
     const mars = findProject('mars-simulation')!
     expect(mars.category).toBe('Simulations')
     expect(matchesFilter(mars, '3D')).toBe(true)
-    expect(matchesFilter(mars, 'Games')).toBe(false)
+    expect(matchesFilter(mars, 'Projects')).toBe(false)
   })
 
-  it('resolves image paths against the base URL', () => {
-    expect(findProject('carpe-diem')!.image).toBe('/img/carpe-diem.jpg')
+  it('resolves asset paths against the base URL', () => {
+    expect(findProject('street-corner')!.model).toBe('/models/street-corner.glb')
     expect(findProject('3d-maze-maker')!.model).toBe('maze')
   })
 })

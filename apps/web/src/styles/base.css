@@ -3,8 +3,6 @@
   --sticker-back: #2f3a4f;
   color-scheme: light;
   --bg: #ffffff;
-  --grid-line: #cfe7f6;
-  --grid-size: 28px;
   --surface: #ffffff;
   --surface-2: #f1f1ef;
   --border: #e5e5e2;
@@ -13,7 +11,10 @@
   --text: #111113;
   --muted: #5d5f66;
   --faint: #8c8e95;
-  --accent: #2f6fe4;
+  --accent: #ff4f2e;
+  --navy: #1d2150;
+  --pale: #e3eef6;
+  --ice: #9fd0ea;
   --accent-ink: #ffffff;
   --error: #c2362f;
   --like: #e0456b;
@@ -26,6 +27,8 @@
   --shelf-back: #f1e5d4;
   --radius: 16px;
   --radius-sm: 10px;
+  --display: 'Josefin Sans', 'Inter', system-ui, sans-serif;
+  --rail: 0px;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   --max: 1160px;
@@ -44,21 +47,6 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-}
-/* Graph paper: pastel blue grid on white, fading out towards the viewport edges. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-  background-position: center top;
-  -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, #000 55%, transparent 100%);
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: 0; padding: 0; }
@@ -84,3 +72,5 @@ kbd {
 .btn:active { transform: scale(0.97); }
 .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
 .btn.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn.icon-btn { padding: 0; width: 44px; height: 44px; justify-content: center; }
+.social-icon { flex: none; display: block; }

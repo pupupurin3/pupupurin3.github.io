@@ -41,7 +41,7 @@ describe('admin', () => {
 
 describe('nightly clean-up', () => {
   it('prunes old rate-limit windows, view rows and abandoned runs but keeps totals', async () => {
-    await call('/v1/projects/hanafuda/views', { method: 'POST' })
+    await call('/v1/projects/fluid-simulation/views', { method: 'POST' })
     await call('/v1/game/runs', { method: 'POST' })
     const later = Date.now() + 3 * 24 * 60 * 60 * 1000
     await worker.scheduled(createScheduledController({ scheduledTime: later, cron: '17 3 * * *' }), env)
@@ -52,6 +52,6 @@ describe('nightly clean-up', () => {
       env.DB.prepare('SELECT COUNT(*) AS n FROM game_runs'),
     ])
     expect(counts.map((r) => r.results[0]!.n)).toEqual([0, 0, 0])
-    expect((await call('/v1/projects/hanafuda')).json.stats.views).toBe(1)
+    expect((await call('/v1/projects/fluid-simulation')).json.stats.views).toBe(1)
   })
 })
