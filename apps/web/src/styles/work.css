@@ -15,6 +15,7 @@
 .card-media { position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-2); clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%); }
 .card-media-inner { width: 100%; height: 100%; }
 .card-media img, .detail-media img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.card-media img[src$='.webp'] { image-rendering: auto; }
 .cover-gen {
   width: 100%; height: 100%; display: grid; place-items: center;
   background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--c) 55%, transparent), transparent 60%), linear-gradient(160deg, color-mix(in srgb, var(--c) 30%, #111) , #111214);
@@ -33,6 +34,13 @@
 .detail { position: relative; width: min(760px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 20px; box-shadow: 0 40px 80px var(--shadow); }
 .detail-media { aspect-ratio: 16 / 9; background: var(--surface-2); overflow: hidden; }
 .detail-media .model-viewer { width: 100%; height: 100%; }
+.detail-media { position: relative; }
+.detail-media img.detail-shot { position: absolute; inset: 0; image-rendering: auto; }
+.detail-thumbs { display: flex; gap: 8px; padding: 12px 28px 0; }
+.detail-thumbs button { width: 88px; aspect-ratio: 16 / 9; padding: 0; border: 2px solid transparent; border-radius: 4px; overflow: hidden; opacity: 0.6; transition: opacity 0.2s, border-color 0.2s; }
+.detail-thumbs button:hover { opacity: 0.9; }
+.detail-thumbs button.on { opacity: 1; border-color: var(--accent); }
+.detail-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .detail-body { padding: 24px 28px 28px; }
 .detail-body h3 { font-size: 1.8rem; letter-spacing: -0.03em; }
 .detail-body p { color: var(--muted); }

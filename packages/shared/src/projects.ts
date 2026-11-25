@@ -23,6 +23,8 @@ export const ProjectSchema = z.object({
   status: z.string().optional(),
   /** Path under the site's public/ folder, e.g. `img/blackjack.jpg`. */
   image: z.string().optional(),
+  /** More screenshots (paths under public/) shown in the project's detail view. */
+  gallery: z.array(z.object({ src: z.string(), alt: z.string() })).optional(),
   /** Accent colour for the generated cover when there is no image. */
   color: z.string().regex(/^#[0-9a-f]{6}$/i),
   tags: z.array(z.string()),
@@ -65,6 +67,12 @@ export const projects = [
     featured: true,
     category: 'Projects',
     status: 'In progress · 2026',
+    image: 'img/ofgm-cambio.webp',
+    gallery: [
+      { src: 'img/ofgm-cambio.webp', alt: 'A Cambio round at the card table: four face-down hands, the deck and discard pile, and the turn buttons' },
+      { src: 'img/ofgm-island.webp', alt: 'The whole island from above at sunset, with the lounge building in the middle and a volcano behind it' },
+      { src: 'img/ofgm-volcano.webp', alt: 'Palm trees on the grass below the volcano' },
+    ],
     color: '#5a3d2b',
     tags: ['Unity', 'C#', 'Multiplayer'],
     blurb: 'An online social hub for card games, built in Unity. You walk around a lounge as a monkey, chat and emote with other players, and sit down at a table to play. The first game is Cambio, with Elo ratings, spectating, a turn timer and a bot that only learns cards it is allowed to see.',

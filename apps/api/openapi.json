@@ -81,6 +81,24 @@
           "image": {
             "type": "string"
           },
+          "gallery": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "src": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "src",
+                "alt"
+              ]
+            }
+          },
           "color": {
             "type": "string",
             "pattern": "^#[0-9a-f]{6}$/i"

@@ -12,6 +12,7 @@ const resolveModel = (m: string) => ((BUILT_IN_MODELS as readonly string[]).incl
 export const projects: Project[] = catalogue.map((p: Project) => ({
   ...p,
   ...(p.image && { image: asset(p.image) }),
+  ...(p.gallery && { gallery: p.gallery.map((g) => ({ ...g, src: asset(g.src) })) }),
   ...(p.model && { model: resolveModel(p.model) }),
 }))
 
