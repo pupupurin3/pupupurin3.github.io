@@ -58,7 +58,7 @@ export function ModelViewer({ model, className = '', chrome = true, zoom = true 
 
   return (
     <div ref={wrap} className={`model-viewer ${className}`}>
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [2.4, 1.8, 2.6], fov: 40 }} frameloop={inView ? 'always' : 'never'}>
+      <Canvas shadows dpr={[1, 2]} resize={{ offsetSize: true }} camera={{ position: [2.4, 1.8, 2.6], fov: 40 }} frameloop={inView ? 'always' : 'never'}>
         <hemisphereLight args={['#cfe6ff', '#1b2333', 0.9]} />
         <directionalLight position={[3, 5, 2]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} />
         <directionalLight position={[-3, 2, -2]} intensity={0.6} color="#7fb8ff" />

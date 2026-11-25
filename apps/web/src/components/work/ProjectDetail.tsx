@@ -13,8 +13,9 @@ import { ProjectLinks, ProjectStatsBar, projectKicker } from './ProjectMeta'
 export function ProjectDetail({ project, onClose }: { project: Project; onClose: () => void }) {
   const id = project.slug
   useModal(onClose)
-  const [shot, setShot] = useState(0)
   const gallery = project.gallery ?? []
+  // -1 is the live 3D model; 0.. are the screenshots.
+  const [shot, setShot] = useState(project.model ? -1 : 0)
 
   return (
     <>
@@ -30,7 +31,7 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
           transition={{ duration: 0.5, ease }}
         >
           <motion.div className="detail-media" layoutId={`media-${id}`}>
-            {project.model ? (
+            {project.model && shot < 0 ? (
               <ModelViewer model={project.model} />
             ) : project.video ? (
               <iframe
@@ -41,7 +42,7 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
                 allowFullScreen
                 loading="lazy"
               />
-            ) : gallery.length ? (
+            ) : gallery[shot] ? (
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.img key={shot} className="detail-shot" src={gallery[shot]!.src} alt={gallery[shot]!.alt} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} />
               </AnimatePresence>
@@ -49,8 +50,13 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
               <Cover project={project} />
             )}
           </motion.div>
-          {gallery.length > 1 && (
+          {gallery.length + (project.model ? 1 : 0) > 1 && (
             <div className="detail-thumbs" role="tablist" aria-label="Screenshots">
+              {project.model && (
+                <button role="tab" aria-selected={shot < 0} aria-label="Live 3D model" className={`thumb-3d ${shot < 0 ? 'on' : ''}`} onClick={() => setShot(-1)}>
+                  3D
+                </button>
+              )}
               {gallery.map((g, i) => (
                 <button key={g.src} role="tab" aria-selected={i === shot} aria-label={g.alt} className={i === shot ? 'on' : ''} onClick={() => setShot(i)}>
                   <img src={g.src} alt="" loading="lazy" />

@@ -13,9 +13,9 @@ export interface ShowcaseModel {
 }
 
 // The models the hero scrolls through, in order. To add one, export a .glb
-// into public/models and add an entry here (Angela goes at the top once her
-// export is in).
+// into public/models and add an entry here.
 export const heroModels: ShowcaseModel[] = [
+  { name: 'Angela', model: asset('models/angela.glb'), date: undefined, tools: ['maya'] }, // TODO: date
   { name: 'Street Corner', model: asset('models/street-corner.glb'), date: undefined, tools: ['maya'] }, // TODO: date
   { name: 'Mars Terrain', model: 'mars', date: undefined, tools: ['three'] }, // TODO: date
   { name: '3D Maze', model: 'maze', date: undefined, tools: ['three'] }, // TODO: date

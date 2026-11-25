@@ -59,6 +59,7 @@ export const projects = [
     color: '#3a4a8c',
     tags: ['Maya', 'Arnold', 'Character'],
     blurb: 'A chibi toy figure modelled in Maya and rendered in Arnold with a toon look. It went from a rough blockout of rounded shapes to a finished character with sculpted hair, a layered coat and hand-painted eyes.',
+    model: 'models/angela.glb',
   },
   {
     slug: 'street-corner',
