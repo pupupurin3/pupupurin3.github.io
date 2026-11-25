@@ -49,8 +49,9 @@ export const projects = [
     featured: true,
     category: '3D',
     status: 'In progress · 2026',
-    image: 'img/angela-render.webp',
+    image: 'img/angela-pose.webp',
     gallery: [
+      { src: 'img/angela-pose.webp', alt: 'Angela posed, holding a black folder, rendered in Arnold on a light grey background' },
       { src: 'img/angela-render.webp', alt: 'Angela rendered in Arnold: a chibi girl with light blue hair, amber eyes and a navy coat' },
       { src: 'img/angela-wireframe.webp', alt: 'The finished model in Maya, wireframe from the top, front and both sides' },
       { src: 'img/angela-blockout.webp', alt: 'The first blockout: simple rounded shapes for the head, body and limbs' },
