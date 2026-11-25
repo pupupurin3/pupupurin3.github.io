@@ -223,17 +223,49 @@ function GLBModel({ url, wireframe }: { url: string; wireframe: boolean }) {
     const s = 2 / Math.max(...box.getSize(new THREE.Vector3()).toArray(), 0.001)
     clone.scale.setScalar(s)
     clone.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true } })
+    toonify(clone)
     return clone
   }, [scene])
 
   useLayoutEffect(() => {
     fitted.traverse((o) => {
       const mesh = o as THREE.Mesh
-      if (mesh.isMesh) ([] as THREE.Material[]).concat(mesh.material).forEach((m) => { (m as THREE.MeshStandardMaterial).wireframe = wireframe })
+      if (mesh.userData.outline) mesh.visible = !wireframe
+      else if (mesh.isMesh) ([] as THREE.Material[]).concat(mesh.material).forEach((m) => { (m as THREE.MeshStandardMaterial).wireframe = wireframe })
     })
   }, [fitted, wireframe])
 
   return <Center><primitive object={fitted} /></Center>
+}
+
+// Toon look for materials tagged { toon: true } in the glTF extras (Angela):
+// three flat bands of light, like Arnold's toon shader, plus a thin dark
+// outline drawn as an inflated back-face shell.
+let toonRamp: THREE.DataTexture | undefined
+function rampTexture() {
+  if (toonRamp) return toonRamp
+  toonRamp = new THREE.DataTexture(new Uint8Array([150, 150, 150, 255, 215, 215, 215, 255, 255, 255, 255, 255]), 3, 1)
+  toonRamp.minFilter = toonRamp.magFilter = THREE.NearestFilter
+  toonRamp.needsUpdate = true
+  return toonRamp
+}
+const outlineMaterial = new THREE.MeshBasicMaterial({ color: '#22303a', side: THREE.BackSide })
+outlineMaterial.onBeforeCompile = (shader) => {
+  shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', 'vec3 transformed = position + normal * 0.006;')
+}
+function toonify(root: THREE.Object3D) {
+  const meshes: THREE.Mesh[] = []
+  root.traverse((o) => { if ((o as THREE.Mesh).isMesh) meshes.push(o as THREE.Mesh) })
+  for (const mesh of meshes) {
+    const src = mesh.material as THREE.MeshStandardMaterial
+    if (Array.isArray(mesh.material) || !src.userData?.toon) continue
+    mesh.material = new THREE.MeshToonMaterial({ color: src.color, map: src.map, gradientMap: rampTexture() })
+    // Self-shadowing on flat toon bands shows as acne; the ground still gets her shadow.
+    mesh.receiveShadow = false
+    const outline = new THREE.Mesh(mesh.geometry, outlineMaterial)
+    outline.userData.outline = true
+    mesh.add(outline)
+  }
 }
 
 const builtIn: Record<string, ComponentType<ModelProps>> = { purin: Purin, mars: Mars, maze: Maze }
