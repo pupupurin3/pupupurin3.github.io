@@ -36,7 +36,7 @@
 .detail-media .model-viewer { width: 100%; height: 100%; }
 .detail-media { position: relative; }
 .detail-video { display: block; width: 100%; height: 100%; border: 0; }
-.detail-media img.detail-shot { position: absolute; inset: 0; image-rendering: auto; }
+.detail-media img.detail-shot { position: absolute; inset: 0; image-rendering: auto; object-fit: contain; }
 .detail-thumbs { display: flex; gap: 8px; padding: 12px 28px 0; }
 .detail-thumbs button { width: 88px; aspect-ratio: 16 / 9; padding: 0; border: 2px solid transparent; border-radius: 4px; overflow: hidden; opacity: 0.6; transition: opacity 0.2s, border-color 0.2s; }
 .detail-thumbs button:hover { opacity: 0.9; }

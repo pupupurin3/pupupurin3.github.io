@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import type { Project } from '../../content/projects'
 
 /** A project's screenshot, its video's thumbnail, or a quiet gradient in its colour with its initials. */
 export function Cover({ project }: { project: Project }) {
+  const [thumbFailed, setThumbFailed] = useState(false)
   if (project.image) return <img src={project.image} alt="" loading="lazy" />
-  if (project.video) return <img className="cover-video" src={`https://i.ytimg.com/vi/${project.video}/hqdefault.jpg`} alt="" loading="lazy" />
+  if (project.video && !thumbFailed)
+    return <img className="cover-video" src={`https://i.ytimg.com/vi/${project.video}/hqdefault.jpg`} alt="" loading="lazy" onError={() => setThumbFailed(true)} />
   const initials = project.title
     .split(/\s+/)
     .map((w) => w[0])
