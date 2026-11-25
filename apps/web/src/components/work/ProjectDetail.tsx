@@ -14,8 +14,9 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
   const id = project.slug
   useModal(onClose)
   const gallery = project.gallery ?? []
-  // -1 is the live 3D model; 0.. are the screenshots.
-  const [shot, setShot] = useState(project.model ? -1 : 0)
+  // -1 is the live 3D model or the video; 0.. are the screenshots.
+  const lead = project.model ? '3D' : project.video ? 'Video' : null
+  const [shot, setShot] = useState(lead ? -1 : 0)
 
   return (
     <>
@@ -33,7 +34,7 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
           <motion.div className="detail-media" layoutId={`media-${id}`}>
             {project.model && shot < 0 ? (
               <ModelViewer model={project.model} />
-            ) : project.video ? (
+            ) : project.video && shot < 0 ? (
               <iframe
                 className="detail-video"
                 src={`https://www.youtube-nocookie.com/embed/${project.video}?rel=0&playsinline=1`}
@@ -50,11 +51,11 @@ export function ProjectDetail({ project, onClose }: { project: Project; onClose:
               <Cover project={project} />
             )}
           </motion.div>
-          {gallery.length + (project.model ? 1 : 0) > 1 && (
+          {gallery.length + (lead ? 1 : 0) > 1 && (
             <div className="detail-thumbs" role="tablist" aria-label="Screenshots">
-              {project.model && (
-                <button role="tab" aria-selected={shot < 0} aria-label="Live 3D model" className={`thumb-3d ${shot < 0 ? 'on' : ''}`} onClick={() => setShot(-1)}>
-                  3D
+              {lead && (
+                <button role="tab" aria-selected={shot < 0} aria-label={lead === '3D' ? 'Live 3D model' : 'Video'} className={`thumb-3d ${shot < 0 ? 'on' : ''}`} onClick={() => setShot(-1)}>
+                  {lead}
                 </button>
               )}
               {gallery.map((g, i) => (

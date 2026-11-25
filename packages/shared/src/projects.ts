@@ -130,6 +130,8 @@ export const projects = [
     featured: true,
     category: 'Apps',
     status: '2025',
+    image: 'img/scambio-hero.webp',
+    gallery: [{ src: 'img/scambio-hero.webp', alt: 'The SCAMBIO landing page: "Practice. Detect. Stay Safe." next to a phone showing scam texts from an unknown sender' }],
     color: '#8c2f3a',
     tags: ['React', 'Node.js', 'Team project'],
     blurb: 'Winner of Rep. Maxine Waters’ 2025 Congressional App Challenge for California’s 43rd District, built with Jin Noguchi. A web app that helps families protect each other from scams: it checks messages for signs of a scam, teaches the red flags, and lets you practise on realistic simulated scams. I built the React training interface and the Node.js API that serves the simulations.',
